@@ -1,0 +1,141 @@
+﻿@model CreateBlogPostModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+@section Styles
+{
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+}
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row">
+            <div class="col-lg-12 mb-4 order-0">
+                <div class="container text-center">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            
+                        </div>
+                        <div class="col-md-2">
+
+                        </div>
+                        <div class="col-md-4">
+                            <nav aria-label="breadcrumb">
+                                <!-- Basic Breadcrumb -->
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a asp-area="Admin" asp-controller="Blog" asp-action="Index">Blog</a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a asp-area="Admin" asp-controller="Blog" asp-action="Create">Create</a>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row g-4">
+            <!--begin::Col-->
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md">
+                <!--begin::Create Blog form-->
+                <div class="card card-primary card-outline mb-4">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h1>
+                                <i class="menu-icon fa-solid fa-pen-nib fa-lg"></i>
+                                <strong>
+                                    Create New Blog
+                                </strong>
+                            </h1>
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Form-->
+                    <form asp-antiforgery="true" asp-area="Admin" asp-controller="Blog"
+                          asp-action="Create" enctype="multipart/form-data">
+                        <!--begin::Body-->
+                        <div asp-validation-summary="All" class="bg-warning"></div>
+                        <div class="card-body">
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput"
+                                placeholder="A day in my life" asp-for="Title">
+                                <label for="floatingInput" asp-for="Title">Title</label>
+                            </div>
+
+                            <div>
+                                <label class="form-label">What's on your mind?</label>
+                            </div>
+
+                            <div class="mb-3">
+                                <textarea id="summernote" asp-for="Body">
+                                <p>Hello World!</p>
+                                <p>Some initial <strong>bold</strong> text</p>
+                                <p><br /></p>
+                            </textarea>
+                            </div>
+
+                        </div>
+                        <!--end::Body-->
+                        <!--begin::Footer-->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                        <!--end::Footer-->
+                    </form>
+                    <!--end::Create Blog form-->
+                </div>
+                <!--end::Quick Example-->
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::Row-->
+    </div>
+    
+    
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+
+    <!-- Initialize Quill editor -->
+    @* <script>
+        const quill = new Quill('#editor', {
+          theme: 'snow',
+        });
+    </script> *@
+    <script>
+        // The $(document).ready function is particularly necessary if you include the Javascript at the end of the document
+        $(document).ready(function()
+        {
+            $("#summernote").summernote({
+                toolbar: [
+                  ['style', ['bold', 'italic', 'underline', 'clear']],
+                  ['font', ['strikethrough', 'superscript', 'subscript','bold','underline','paragraph']],
+                  ['color', ['color']],
+                  ['para', ['ul', 'ol', 'paragraph']],
+                  ['table', ['table']],
+                  ['insert', ['link', 'picture', 'video']],
+                  ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+        });
+    </script>
+}
+

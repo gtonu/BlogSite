@@ -1,0 +1,229 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css" />
+}
+
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <nav aria-label="breadcrumb">
+            <!-- Basic Breadcrumb -->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a asp-area="Admin" asp-controller="Blog" asp-action="Index">Blog</a>
+                </li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+            <!-- /Basic Breadcrumb -->
+        </nav>
+        <!-- buttons section -->
+        <div class="row">
+            <div class="col-lg-12 mb-4 order-0">
+                <div class="container text-center">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <button class="btn rounded-pill btn-secondary me-1"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseExample"
+                                    aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                <i class="fa-brands fa-searchengin"></i>Advanced Search
+                            </button>
+                        </div>
+                        <div class="col">
+                            
+                        </div>
+                        <div class="col">
+                            <a asp-area="Admin" asp-controller="Blog" asp-action="Create" 
+                            class="btn rounded-pill btn-success">
+                                <span class="menu-icon fa-solid fa-pen-nib"></span>Create New Blog
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /buttons section -->
+
+        <!-- Collapsed content block for advanced search form -->
+        <div class="collapse" id="collapseExample">
+            <div class="d-grid d-sm-flex p-3 border">
+                <img src="~/sneat/assets/img/elements/1.jpg"
+                     alt="collapse-image"
+                     height="125"
+                     class="me-4 mb-sm-0 mb-2" />
+                <span>
+                    <form action="/" method="post">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="nameBasic" class="form-label">Name</label>
+                                <input type="text" id="nameBasic" class="form-control" placeholder="Enter Name" />
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailBasic" class="form-label">Email</label>
+                                <input type="text" id="emailBasic" class="form-control" placeholder="xxxx@xxx.xx" />
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobBasic" class="form-label">DOB</label>
+                                <input type="text" id="dobBasic" class="form-control" placeholder="DD / MM / YY" />
+                            </div>
+                        </div>
+                    </form>
+                </span>
+            </div>
+        </div>
+        <!-- /Collapsed content -->
+        <!-- Modal -->
+        <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1">Modal title</h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+                        <form action="/" method="post">
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">Name</label>
+                                    <input type="text" id="nameBasic" class="form-control" placeholder="Enter Name" />
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col mb-0">
+                                    <label for="emailBasic" class="form-label">Email</label>
+                                    <input type="text" id="emailBasic" class="form-control" placeholder="xxxx@xxx.xx" />
+                                </div>
+                                <div class="col mb-0">
+                                    <label for="dobBasic" class="form-label">DOB</label>
+                                    <input type="text" id="dobBasic" class="form-control" placeholder="DD / MM / YY" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Modal -->
+        <!-- begin::Datatable section -->
+        <div class="row g-4">
+            <!--begin::Col-->
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md">
+                <!--begin::Create Blog form-->
+                <div class="card card-primary card-outline mb-4">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h1>
+                                <strong>Blog List</strong>
+                            </h1>
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Form-->
+                    <form asp-antiforgery="true" asp-area="Admin" asp-controller="Blog"
+                          asp-action="Create" enctype="multipart/form-data">
+                        <!--begin::Table-->
+                        <table id="products" class="table table-hover table-success table-striped-columns">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Body</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Body</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <!--end::Table-->
+                        <!--begin::Footer-->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                        <!--end::Footer-->
+                    </form>
+                    <!--end::Create Blog form-->
+                </div>
+                <!--end::Quick Example-->
+            </div>
+            <!--end::Col-->
+        </div>
+        <!-- end::Datatable section -->
+    </div>
+    
+    <!-- / Content -->
+</div>
+
+@* @section Scripts
+{
+    <script>
+        $('#basicModal').on('show.bs.modal',function(){
+            $('#modalBody').load('/Admin/blog/create');
+        });
+    </script>
+} *@
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+    <script>
+        $(function()
+        {
+            $("#products").DataTable({
+                processing:true,
+                serverside:false,
+                responsive:true,
+                lengthChange:true,
+                autoWidth:false,
+                columnDefs:[
+                    {
+                        orderable: false,
+                        targets: 2,
+                        render: function(data, type, row){
+                            return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/product/edit/${data}'" value='${data}'>
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </button>
+                                    <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>`;
+                        }
+                    }
+                ]
+            })
+            
+        });
+    </script>
+}
+
+
+
