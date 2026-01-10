@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DevSkill.Blog.Application.Features.Post.Commands
 {
-    public class CreateBlogPostCommandHandler : ICommandHandler<CreateBlogPostCommand, Guid>
+    public class CreateBlogPostCommandHandler : ICommandHandler<CreateBlogPostCommand, BlogPost>
     {
         private readonly IApplicationUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ namespace DevSkill.Blog.Application.Features.Post.Commands
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<Guid> Handle(CreateBlogPostCommand command, CancellationToken cancellationToken)
+        public async Task<BlogPost> Handle(CreateBlogPostCommand command, CancellationToken cancellationToken)
         {
             var product = _mapper.Map<BlogPost>(command);
             product.Id = IdentityGenerator.NewSequentialGuid();
@@ -28,7 +28,7 @@ namespace DevSkill.Blog.Application.Features.Post.Commands
             await _unitOfWork.BlogPostRepository.AddAsync(product);
             await _unitOfWork.SaveAsync();
 
-            return Guid.NewGuid();
+            return product;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Cortex.Mediator.Commands;
+using DevSkill.Blog.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DevSkill.Blog.Application.Features.Post.Commands
 {
-    public class CreateBlogPostCommand : ICommand<Guid>
+    public class CreateBlogPostCommand : ICommand<BlogPost>
     {
         public string Title { get; set; } = null!;
         public string Body { get; set; } = null!;

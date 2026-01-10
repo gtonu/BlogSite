@@ -52,6 +52,7 @@
             <div class="col-md">
                 <!--begin::Create Blog form-->
                 <div class="card card-primary card-outline mb-4">
+                    <div class="bg-secondary p-1 rounded-top w-100"></div>
                     <!--begin::Header-->
                     <div class="card-header">
                         <div class="card-title">
@@ -75,6 +76,7 @@
                                 <input type="text" class="form-control" id="floatingInput"
                                 placeholder="A day in my life" asp-for="Title">
                                 <label for="floatingInput" asp-for="Title">Title</label>
+                                <span asp-validation-for="Title" class="text-danger"></span>
                             </div>
 
                             <div>
@@ -83,10 +85,9 @@
 
                             <div class="mb-3">
                                 <textarea id="summernote" asp-for="Body">
-                                <p>Hello World!</p>
-                                <p>Some initial <strong>bold</strong> text</p>
-                                <p><br /></p>
-                            </textarea>
+                                    
+                                </textarea>
+                                <span asp-validation-for="Body" class="text-danger"></span>
                             </div>
 
                         </div>
@@ -98,6 +99,7 @@
                         <!--end::Footer-->
                     </form>
                     <!--end::Create Blog form-->
+                    <div class="bg-secondary p-1 rounded-bottom w-100"></div>
                 </div>
                 <!--end::Quick Example-->
             </div>
@@ -126,16 +128,17 @@
         {
             $("#summernote").summernote({
                 toolbar: [
-                  ['style', ['bold', 'italic', 'underline', 'clear']],
+                  ['style', ['italic', 'clear']],
                   ['font', ['strikethrough', 'superscript', 'subscript','bold','underline','paragraph']],
                   ['color', ['color']],
                   ['para', ['ul', 'ol', 'paragraph']],
                   ['table', ['table']],
-                  ['insert', ['link', 'picture', 'video']],
-                  ['view', ['fullscreen', 'codeview', 'help']]
+                  ['insert', ['link', 'picture']],
+                  ['view', ['help']]
                 ]
             });
         });
     </script>
+    <partial name="_ValidationScriptsPartial"/>
 }
 
