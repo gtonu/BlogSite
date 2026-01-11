@@ -21,6 +21,8 @@ try
 {
    
     var builder = WebApplication.CreateBuilder(args);
+    var googleClientId = builder.Configuration["web:client_id"];
+    var googleClientSecret = builder.Configuration["web:client_secret"];
 
     // Adding services/dependencies to the built-in dependency injection container of ASP.NET framework.(Service collection)
     #region Adding dependencies to DI container
@@ -37,6 +39,14 @@ try
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
         throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     var migrationAssembly = Assembly.GetAssembly(typeof(ApplicationDbContext));
+
+    #region google login
+    builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = googleClientId;
+        googleOptions.ClientSecret = googleClientSecret;
+    });
+    #endregion
 
     #region Service collection based dependency injection
     builder.Services.AddDependencyInjections();
@@ -118,4 +128,3 @@ finally
 {
     Log.CloseAndFlush();
 }
-
