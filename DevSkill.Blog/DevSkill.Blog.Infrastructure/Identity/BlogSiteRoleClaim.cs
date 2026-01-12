@@ -2,7 +2,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace Demo.Infrastructure.Identity
+namespace DevSkill.Blog.Infrastructure.Identity
 {
     public class BlogSiteRoleClaim
         : IdentityRoleClaim<Guid>

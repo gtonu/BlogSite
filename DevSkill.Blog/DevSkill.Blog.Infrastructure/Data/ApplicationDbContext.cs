@@ -1,4 +1,4 @@
-﻿using Demo.Infrastructure.Identity;
+﻿using DevSkill.Blog.Infrastructure.Identity;
 using DevSkill.Blog.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace Demo.Infrastructure.Identity
+namespace DevSkill.Blog.Infrastructure.Identity
 {
     public class BlogSiteUser : IdentityUser<Guid>
     {

@@ -1,4 +1,4 @@
-﻿using Demo.Infrastructure.Identity;
+﻿using DevSkill.Blog.Infrastructure.Identity;
 using DevSkill.Blog.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;

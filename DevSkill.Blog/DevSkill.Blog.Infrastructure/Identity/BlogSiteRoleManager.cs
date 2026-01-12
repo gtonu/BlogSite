@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Infrastructure.Identity
+namespace DevSkill.Blog.Infrastructure.Identity
 {
     public class BlogSiteRoleManager
         : RoleManager<BlogSiteRole>

@@ -1,4 +1,4 @@
-﻿using Demo.Infrastructure.Identity;
+﻿using DevSkill.Blog.Infrastructure.Identity;
 using DevSkill.Blog.Domain;
 using DevSkill.Blog.Domain.Repositories;
 using DevSkill.Blog.Infrastructure.Data;
