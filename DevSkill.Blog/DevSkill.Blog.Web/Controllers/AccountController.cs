@@ -145,7 +145,7 @@ namespace DevSkill.Blog.Web.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-        public IActionResult ExternalLoginAsync(ExternalLoginModel model)
+        public IActionResult ExternalLogin(ExternalLoginModel model)
         {
             if (!string.IsNullOrEmpty(model.ErrorMessage))
             {
