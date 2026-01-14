@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Blog.Infrastructur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Blog.Worker", "DevSkill.Blog.Worker\DevSkill.Blog.Worker.csproj", "{B1CC3D5A-92F9-429D-B3E4-25F61A63AF15}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Blog.Application.Tests", "..\Tests\DevSkill.Blog.Application.Tests\DevSkill.Blog.Application.Tests.csproj", "{D947C60B-5C71-48E2-86BB-3F031E78ED75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +43,16 @@ Global
 		{B1CC3D5A-92F9-429D-B3E4-25F61A63AF15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1CC3D5A-92F9-429D-B3E4-25F61A63AF15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1CC3D5A-92F9-429D-B3E4-25F61A63AF15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D947C60B-5C71-48E2-86BB-3F031E78ED75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D947C60B-5C71-48E2-86BB-3F031E78ED75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D947C60B-5C71-48E2-86BB-3F031E78ED75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D947C60B-5C71-48E2-86BB-3F031E78ED75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D947C60B-5C71-48E2-86BB-3F031E78ED75} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {29956D35-3876-4B02-8F55-012CF97C624B}
