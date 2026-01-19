@@ -1,5 +1,6 @@
 ﻿using DevSkill.Blog.Infrastructure.Identity;
 using DevSkill.Blog.Web.Models;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -21,11 +22,13 @@ namespace DevSkill.Blog.Web.Controllers
         private readonly IUserEmailStore<BlogSiteUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         //private readonly IEmailSender _emailSender;
+        private IMapper _mapper;
         public AccountController(
             UserManager<BlogSiteUser> userManager,
             IUserStore<BlogSiteUser> userStore,
             SignInManager<BlogSiteUser> signInManager,
-            ILogger<RegisterModel> logger
+            ILogger<RegisterModel> logger,
+            IMapper mapper
             )
         {
             _userManager = userManager;
@@ -34,6 +37,7 @@ namespace DevSkill.Blog.Web.Controllers
             _signInManager = signInManager;
             _logger = logger;
             //_emailSender = emailSender;
+            _mapper = mapper;
         }
         public async Task<IActionResult> RegisterAsync(string returnUrl = null)
         {
@@ -44,14 +48,19 @@ namespace DevSkill.Blog.Web.Controllers
 
             return View(model);
         }
-        [HttpPost,ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterAsync(RegisterModel model)
         {
             model.ReturnUrl ??= Url.Content("~/");
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                //var user = CreateUser();
+                var user = _mapper.Map<RegisterModel, BlogSiteUser>(model);
+                if(model.PhoneNumber != null)
+                {
+                    user.PhoneNumberConfirmed = true;
+                }
 
                 await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
@@ -65,7 +74,8 @@ namespace DevSkill.Blog.Web.Controllers
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Action(
-                        "ConfirmEmail", "Account",
+                        "ConfirmEmail",
+                        "Account",
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = model.ReturnUrl },
                         protocol: Request.Scheme);
 

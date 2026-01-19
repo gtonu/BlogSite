@@ -5,6 +5,11 @@
     Layout = "_AuthenticationLayout";
 }
 
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.0/build/css/intlTelInput.css">
+}
+
 <!-- the pulse animation will apply on page reload,not on hover -->
 <div class="card ">
     <div class="bg-secondary p-1 rounded-top w-100"></div>
@@ -76,6 +81,14 @@
                 <label asp-for="LastName">LastName</label>
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
+            <div class="form-floating mb-3">
+                <input type="tel" class="form-control" id="phone"
+                       placeholder="Enter your phone number" asp-for="PhoneNumber">
+                <input type="hidden" id="countryName" asp-for="CountryName">
+                <input type="hidden" id="countryDialCode" asp-for="CountryDialCode">
+                <p class="text-info"><small>Optional</small></p>
+            </div>
+            <div><span asp-validation-for="LastName" class="text-danger"></span></div>
             <div class="form-floating mb-3">
                 <input type="email" class="form-control"
                        placeholder="Enter your email address" asp-for="Email">
@@ -174,6 +187,30 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    @* int-tel-input library's js link and initialization*@
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.0/build/js/intlTelInput.min.js"></script>
+    <script>
+        const input = document.querySelector("#phone");
+        const phoneWithCountryDetails = window.intlTelInput(input, {
+          separateDialCode: true,
+          loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.0/build/js/utils.js"),
+        });
+
+        const ExtractCountryDetails = () => {
+            const countryData = phoneWithCountryDetails.getSelectedCountryData();  //returns a json object.
+            if(countryData && Object.keys(countryData).length !== 0)
+            {
+                document.querySelector("#countryName").value = countryData.name;
+                document.querySelector("#countryDialCode").value = countryData.dialCode;
+            }
+        }
+
+        phoneWithCountryDetails.promise.then(() => {
+            input.addEventListener("countrychange",ExtractCountryDetails);
+            ExtractCountryDetails();
+        });
+    </script>
 }
 
 

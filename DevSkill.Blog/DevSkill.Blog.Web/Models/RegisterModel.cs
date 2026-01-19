@@ -8,9 +8,11 @@ namespace DevSkill.Blog.Web.Models
     {
         [Required(ErrorMessage ="First name is required")]
         public string FirstName { get; set; }
-
-        [Required(ErrorMessage = "Last name is required")]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? CountryName { get; set; }
+        public string? CountryDialCode { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

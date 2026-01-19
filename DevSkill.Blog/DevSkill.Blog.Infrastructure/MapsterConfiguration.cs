@@ -1,5 +1,6 @@
 ﻿using DevSkill.Blog.Application.Features.Post.Commands;
 using DevSkill.Blog.Domain.Entities;
+using DevSkill.Blog.Infrastructure.Identity;
 using Mapster;
 using System;
 using System.Collections.Generic;
