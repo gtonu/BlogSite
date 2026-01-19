@@ -23,6 +23,8 @@ try
     var builder = WebApplication.CreateBuilder(args);
     var googleClientId = builder.Configuration["web:client_id"];
     var googleClientSecret = builder.Configuration["web:client_secret"];
+    var githubClientId = builder.Configuration["github:client_id"];
+    var githubClientSecret = builder.Configuration["github:client_secret"];
 
     // Adding services/dependencies to the built-in dependency injection container of ASP.NET framework.(Service collection)
     #region Adding dependencies to DI container
@@ -45,6 +47,14 @@ try
     {
         googleOptions.ClientId = googleClientId;
         googleOptions.ClientSecret = googleClientSecret;
+    });
+    #endregion
+
+    #region Github Login
+    builder.Services.AddAuthentication().AddGitHub(options =>
+    {
+        options.ClientId = githubClientId;
+        options.ClientSecret = githubClientSecret;
     });
     #endregion
 

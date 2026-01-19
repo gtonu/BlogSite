@@ -215,7 +215,10 @@ button.list-group-item-primary.active {
   color: #fff;
   background-color: #5f61e6;
   border-color: #5f61e6;
-  transform: translateY(-1px);
+  transform: translateY(-5px);
+}
+.btn-primary:active {
+    transform: translateY(-2px);
 }
 .btn-check:focus + .btn-primary, .btn-primary:focus, .btn-primary.focus {
   color: #fff;
@@ -557,7 +560,8 @@ html[dir=rtl] .border-primary {
 }
 
 a {
-  color: #696cff;
+  /*  oxford blue*/
+  color: #212A37;
 }
 a:hover {
   color: #787bff;

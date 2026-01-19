@@ -105,3 +105,13 @@
   text-align: center;
   margin-top: 1rem;
 }
+
+/* Reuse Animate.css keyframes but control the trigger */
+.sneat-pulse-hover:hover {
+    animation: pulse 0.1s ease-in-out; /* Use the 'pulse' keyframe name from Animate.css */
+}
+
+
+
+
+

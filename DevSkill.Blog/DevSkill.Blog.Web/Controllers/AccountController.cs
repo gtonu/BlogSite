@@ -163,20 +163,20 @@ namespace DevSkill.Blog.Web.Controllers
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
-        public async Task<IActionResult> ExternalLoginCallbackAsync(ExternalLoginModel model,string returnUrl = null, string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallbackAsync(string returnUrl = null, string remoteError = null)
         {
-            //var model = new ExternalLoginModel();
-            returnUrl ??= Url.Content("~/");
+            var model = new ExternalLoginModel();
+            model.ReturnUrl ??= Url.Content("~/");
             if (remoteError != null)
             {
                 model.ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToAction("Login", "Account", new { ReturnUrl = returnUrl });
+                return RedirectToAction("Login", "Account", new { ReturnUrl = model.ReturnUrl });
             }
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 model.ErrorMessage = "Error loading external login information.";
-                return RedirectToAction("Login", "Account", new { ReturnUrl = returnUrl });
+                return RedirectToAction("Login", "Account", new { ReturnUrl = model.ReturnUrl });
             }
 
             // Sign in the user with this external login provider if the user already has a login.
@@ -184,7 +184,7 @@ namespace DevSkill.Blog.Web.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-                return LocalRedirect(returnUrl);
+                return LocalRedirect(model.ReturnUrl);
             }
             if (result.IsLockedOut)
             {
@@ -199,7 +199,7 @@ namespace DevSkill.Blog.Web.Controllers
                 {
                     model.Email = info.Principal.FindFirstValue(ClaimTypes.Email);
                 }
-                return View("ExternalLogin",model);
+                return View("ExternalLogin", model);
             }
         }
         [HttpPost,ValidateAntiForgeryToken]
