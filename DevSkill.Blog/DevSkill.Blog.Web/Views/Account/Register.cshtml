@@ -63,7 +63,7 @@
         <p class="mb-4">Make your app management easy and fun!</p>
 
         <form class="mb-3" asp-antiforgery="true" asp-area="" asp-controller="Account"
-         asp-action="Register" method="POST" enctype="multipart/form-data">
+         asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" method="POST" enctype="multipart/form-data">
             <div class="form-floating mb-3">
                 <input type="text" class="form-control"
                        placeholder="Enter your first name" asp-for="FirstName">

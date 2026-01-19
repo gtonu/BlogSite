@@ -163,9 +163,11 @@ namespace DevSkill.Blog.Web.Controllers
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
-        public async Task<IActionResult> ExternalLoginCallbackAsync(string returnUrl = null, string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallbackAsync(ExternalLoginModel model,string returnUrl = null, string remoteError = null)
         {
-            var model = new ExternalLoginModel();
+            //var model = new ExternalLoginModel();
+            //if we create a new instance as above we will lose the returnUrl..so we have to catch the model in parameter..
+
             model.ReturnUrl ??= Url.Content("~/");
             if (remoteError != null)
             {

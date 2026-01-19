@@ -61,8 +61,8 @@
         <h4 class="mb-2">Welcome to Sneat! 👋</h4>
         <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-        <form class="mb-3" asp-antiforgery="true" asp-area="" asp-controller="Account" 
-         asp-action="Login" method="POST">
+        <form class="mb-3" asp-antiforgery="true" asp-area="" asp-controller="Account"
+         asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" method="POST">
             <div class="form-floating mb-3">
                 <input type="text" class="form-control"
                        placeholder="Enter your email or username" asp-for="Email">
