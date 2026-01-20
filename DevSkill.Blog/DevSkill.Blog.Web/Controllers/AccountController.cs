@@ -1,4 +1,5 @@
-﻿using DevSkill.Blog.Infrastructure.Identity;
+﻿using DevSkill.Blog.Domain.Utilities;
+using DevSkill.Blog.Infrastructure.Identity;
 using DevSkill.Blog.Web.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication;
@@ -8,9 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace DevSkill.Blog.Web.Controllers
 {
@@ -21,13 +24,14 @@ namespace DevSkill.Blog.Web.Controllers
         private readonly IUserStore<BlogSiteUser> _userStore;
         private readonly IUserEmailStore<BlogSiteUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        //private readonly IEmailSender _emailSender;
+        private readonly IEmailUtility _emailUtility;
         private IMapper _mapper;
         public AccountController(
             UserManager<BlogSiteUser> userManager,
             IUserStore<BlogSiteUser> userStore,
             SignInManager<BlogSiteUser> signInManager,
             ILogger<RegisterModel> logger,
+            IEmailUtility emailUtility,
             IMapper mapper
             )
         {
@@ -36,7 +40,7 @@ namespace DevSkill.Blog.Web.Controllers
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-            //_emailSender = emailSender;
+            _emailUtility = emailUtility;
             _mapper = mapper;
         }
         public async Task<IActionResult> RegisterAsync(string returnUrl = null)
@@ -79,8 +83,8 @@ namespace DevSkill.Blog.Web.Controllers
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = model.ReturnUrl },
                         protocol: Request.Scheme);
 
-                    //await _emailSender.SendEmailAsync(model.Email, "Confirm your email",
-                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailUtility.SendEmailAsync(model.FirstName,model.Email, "Confirm your email",
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -244,14 +248,14 @@ namespace DevSkill.Blog.Web.Controllers
                         var userId = await _userManager.GetUserIdAsync(user);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
+                        var callbackUrl = Url.Action(
+                            "ConfirmEmail",
+                            "Account",
                             values: new { area = "Identity", userId = userId, code = code },
                             protocol: Request.Scheme);
 
-                        //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        await _emailUtility.SendEmailAsync(model.Email,model.Email, "Confirm your email",
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                         // If account confirmation is required, we need to show the link if we don't have a real email sender
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
@@ -272,6 +276,110 @@ namespace DevSkill.Blog.Web.Controllers
             model.ProviderDisplayName = info.ProviderDisplayName;
             return View("ExternalLogin",model);
         }
+
+        public async Task<IActionResult> ConfirmEmailAsync(string userId, string code)
+        {
+            var model = new ConfirmEmailModel();
+            if (userId == null || code == null)
+            {
+                return RedirectToAction("Register");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{userId}'.");
+            }
+
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            model.StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            return View();
+        }
+
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+        public async Task<IActionResult> ForgotPasswordAsync()
+        {
+            var model = new ForgotPasswordModel();
+            return View(model);
+        }
+
+        [HttpPost,ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                {
+                    // Don't reveal that the user does not exist or is not confirmed
+                    return RedirectToAction("ForgotPasswordConfirmation");
+                }
+
+                // For more information on how to enable account confirmation and password reset please
+                // visit https://go.microsoft.com/fwlink/?LinkID=532713
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Action(
+                    "ResetPassword",
+                    "Account",
+                    values: new { area = "Identity", code },
+                    protocol: Request.Scheme);
+
+                await _emailUtility.SendEmailAsync(model.Email,
+                    model.Email,
+                    "Reset Password",
+                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                return RedirectToAction("ForgotPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+        public async Task<IActionResult> ResetPasswordAsync(string code = null)
+        {
+            var model = new ResetPasswordModel();
+            if (code == null)
+            {
+                return BadRequest("A code must be supplied for password reset.");
+            }
+            else
+            {
+                model.Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+                return View(model);
+            }
+        }
+        [HttpPost,ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Login");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View(model);
+        }
+        
         public async Task<IActionResult> LogoutAsync(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();

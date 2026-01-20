@@ -1,5 +1,6 @@
 using Cortex.Mediator.DependencyInjection;
 using DevSkill.Blog.Application.Features.Post.Commands;
+using DevSkill.Blog.Domain.Email;
 using DevSkill.Blog.Infrastructure;
 using DevSkill.Blog.Infrastructure.Data;
 using DevSkill.Blog.Infrastructure.Extensions;
@@ -89,6 +90,10 @@ try
 
     #region Identity Framework configuration
     builder.Services.AddModifiedIdentity();
+    #endregion
+
+    #region Mapping Mailtrap configuration with SmtpSettings class from appsettings.json
+    builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
     #endregion
 
     builder.Services.AddControllersWithViews();

@@ -13,6 +13,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using DevSkill.Blog.Domain.Utilities;
+using DevSkill.Blog.Infrastructure.Utilities;
 
 namespace DevSkill.Blog.Infrastructure.Extensions
 {
@@ -22,6 +24,7 @@ namespace DevSkill.Blog.Infrastructure.Extensions
         {
             services.AddScoped<IBlogPostRepository, BlogPostRepository>();
             services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
+            services.AddSingleton<IEmailUtility, EmailUtility>();
         }
         public static void AddApplicationDbContext(this IServiceCollection services,
             string connectionString,Assembly migrationAssembly)

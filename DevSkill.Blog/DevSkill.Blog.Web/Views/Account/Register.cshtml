@@ -1,5 +1,4 @@
-﻿
-@model RegisterModel
+﻿@model RegisterModel
 @{
     ViewData["Title"] = "Register";
     Layout = "_AuthenticationLayout";
@@ -68,7 +67,7 @@
         <p class="mb-4">Make your app management easy and fun!</p>
 
         <form class="mb-3" asp-antiforgery="true" asp-area="" asp-controller="Account"
-         asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" method="POST" enctype="multipart/form-data">
+              asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" method="POST" enctype="multipart/form-data">
             <div class="form-floating mb-3">
                 <input type="text" class="form-control"
                        placeholder="Enter your first name" asp-for="FirstName">
@@ -97,7 +96,7 @@
             </div>
             <div class="form-floating mb-3 form-password-toggle">
                 <input type="password" asp-for="Password" class="form-control"
-                 placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" />
+                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" />
                 <label asp-for="Password">Password</label>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
@@ -150,23 +149,23 @@
                                     @foreach (var provider in Model.ExternalLogins!)
                                     {
                                         <button type="submit" class="btn btn-link btn-floating rounded-circle" name="provider" value="@provider.Name" title="Sign up using your @provider.DisplayName account"
-                                         style="transition: 0.3s;"
-                                         onmouseover="this.style.borderColor='#EF5B25';"
-                                         onmouseout="this.style.borderColor='#FFF';">
+                                                style="transition: 0.3s;"
+                                                onmouseover="this.style.borderColor='#EF5B25';"
+                                                onmouseout="this.style.borderColor='#FFF';">
                                             @{
-                                                if(provider.DisplayName == "Google")
+                                                if (provider.DisplayName == "Google")
                                                 {
                                                     <i class="fab fa-google"></i>
                                                 }
-                                                else if(provider.DisplayName == "GitHub")
+                                                else if (provider.DisplayName == "GitHub")
                                                 {
                                                     <i class="fab fa-github"></i>
                                                 }
-                                                else if(provider.DisplayName == "Linkedin")
+                                                else if (provider.DisplayName == "Linkedin")
                                                 {
                                                     <i class="fab fa-linkedin"></i>
                                                 }
-                                                else if(provider.DisplayName == "Twitter")
+                                                else if (provider.DisplayName == "Twitter")
                                                 {
                                                     <i class="fab fa-twitter"></i>
                                                 }
@@ -212,5 +211,7 @@
         });
     </script>
 }
+
+
 
 
