@@ -10,5 +10,8 @@ namespace DevSkill.Blog.Domain
     public interface IApplicationUnitOfWork : IUnitOfWork
     {
         public IBlogPostRepository BlogPostRepository { get; }
+        public ICategoryRepository CategoryRepository { get; }
+        public ITagRepository TagRepository { get; }
+        public ITermsAndConditionsRepository TermsAndConditionsRepository { get; }
     }
 }

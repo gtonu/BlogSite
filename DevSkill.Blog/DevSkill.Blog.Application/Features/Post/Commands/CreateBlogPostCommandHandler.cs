@@ -3,11 +3,7 @@ using DevSkill.Blog.Domain;
 using DevSkill.Blog.Domain.Entities;
 using DevSkill.Blog.Domain.Utilities;
 using MapsterMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DevSkill.Blog.Application.Features.Post.Commands
 {
@@ -22,13 +18,15 @@ namespace DevSkill.Blog.Application.Features.Post.Commands
         }
         public async Task<BlogPost> Handle(CreateBlogPostCommand command, CancellationToken cancellationToken)
         {
-            var product = _mapper.Map<BlogPost>(command);
-            product.Id = IdentityGenerator.NewSequentialGuid();
+            var blog = _mapper.Map<BlogPost>(command);
+            blog.Id = IdentityGenerator.NewSequentialGuid();
+            blog.GenerateUrl();
 
-            await _unitOfWork.BlogPostRepository.AddAsync(product);
+
+            await _unitOfWork.BlogPostRepository.AddAsync(blog);
             await _unitOfWork.SaveAsync();
 
-            return product;
+            return blog;
         }
     }
 }

@@ -99,8 +99,6 @@ public class CreateBlogPostCommandHandlerTests
             () => _applicationUnitOfWorkMock.VerifyAll(),
             () => _blogPostRepositoryMock.VerifyAll()
             );
-        
-        
 
     }
 }

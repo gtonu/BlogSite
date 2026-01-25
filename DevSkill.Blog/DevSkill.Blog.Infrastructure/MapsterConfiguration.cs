@@ -15,6 +15,8 @@ namespace DevSkill.Blog.Infrastructure
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<CreateBlogPostCommand, BlogPost>();
+            config.NewConfig<CreateCategoryCommand, Category>();
+            config.NewConfig<CreateTagCommand, Tag>();
         }
     }
 }

@@ -1,0 +1,154 @@
+﻿@model CreateCategoryModel
+@{
+    ViewData["Title"] = "CreateCategory";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css" />
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="container text-center">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                        <nav aria-label="breadcrumb">
+                            <!-- Basic Breadcrumb -->
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a asp-area="Admin" asp-controller="Category" asp-action="Create">Category</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a asp-area="Admin" asp-controller="Category" asp-action="Create">Create</a>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row g-4">
+            <!--begin::Col-->
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md">
+                <!--begin::Create Blog form-->
+                <div class="card card-primary card-outline mb-4">
+                    <div class="bg-secondary p-1 rounded-top w-100"></div>
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h1>
+                                <i class="menu-icon fa-solid fa-pen-nib fa-lg"></i>
+                                <strong>
+                                    Create New Category
+                                </strong>
+                            </h1>
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Form-->
+                    <form asp-antiforgery="true" asp-area="Admin" asp-controller="Category"
+                          asp-action="Create" enctype="multipart/form-data">
+                        <!--begin::Body-->
+                        <div asp-validation-summary="All" class="bg-warning"></div>
+                        <div class="row">
+                            <div class="form-floating col-md-3 offset-md-1 mb-3">
+                                <input type="text" class="form-control"
+                                       placeholder="e.g Sports" asp-for="CategoryName">
+                                <label asp-for="CategoryName" class="text-dark offset-md-1">Category</label>
+                                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                            </div>
+                            @* <div class="form-floating col-md-3 offset-md-1 mb-3">
+                                <input type="text" class="form-control"
+                                       placeholder="e.g Sports" asp-for="CategoryName">
+                                <label asp-for="CategoryName">Category</label>
+                                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                            </div> *@
+                        </div>
+                        <!-- Data Table -->
+
+                        <div class="card-footer d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                        <!--end::Footer-->
+                    </form>
+
+
+                    <!--end::Create Blog form-->
+                    <div class="bg-secondary p-1 rounded-bottom w-100"></div>
+                </div>
+                <!--end::Quick Example-->
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::Row-->
+    </div>
+
+    <div class="container-fluid">
+        <table id="products" class="table table-hover table-success table-striped-columns">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+    <script>
+        $(function()
+        {
+            $("#products").DataTable({
+                processing:true,
+                serverside:false,
+                responsive:true,
+                lengthChange:true,
+                autoWidth:false,
+                columnDefs:[
+                    {
+                        orderable: false,
+                        targets: 1,
+                        render: function(data, type, row){
+                            return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/product/edit/${data}'" value='${data}'>
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </button>
+                                    <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>`;
+                        }
+                    }
+                ]
+            })
+
+        });
+    </script>
+}
+
+
+
+

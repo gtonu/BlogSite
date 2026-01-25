@@ -9,40 +9,37 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
 }
 
-<div class="content-wrapper">
-    <div class="container-xxl flex-grow-1 container-p-y">
-        <div class="row">
-            <div class="col-lg-12 mb-4 order-0">
-                <div class="container text-center">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            
-                        </div>
-                        <div class="col-md-2">
 
-                        </div>
-                        <div class="col-md-4">
-                            <nav aria-label="breadcrumb">
-                                <!-- Basic Breadcrumb -->
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">
-                                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <a asp-area="Admin" asp-controller="Blog" asp-action="Index">Blog</a>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <a asp-area="Admin" asp-controller="Blog" asp-action="Create">Create</a>
-                                    </li>
-                                </ol>
-                            </nav>
-                        </div>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="container text-center">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                        <nav aria-label="breadcrumb">
+                            <!-- Basic Breadcrumb -->
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a asp-area="Admin" asp-controller="Blog" asp-action="Index">Blog</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a asp-area="Admin" asp-controller="Blog" asp-action="Create">Create</a>
+                                </li>
+                            </ol>
+                        </nav>
                     </div>
                 </div>
             </div>
         </div>
-        
     </div>
+
     <div class="container-fluid">
         <!--begin::Row-->
         <div class="row g-4">
@@ -74,7 +71,7 @@
 
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="floatingInput"
-                                placeholder="A day in my life" asp-for="Title">
+                                       placeholder="A day in my life" asp-for="Title">
                                 <label for="floatingInput" asp-for="Title">Title</label>
                                 <span asp-validation-for="Title" class="text-danger"></span>
                             </div>
@@ -107,9 +104,11 @@
         </div>
         <!--end::Row-->
     </div>
-    
-    
 </div>
+
+
+
+
 
 @section Scripts
 {

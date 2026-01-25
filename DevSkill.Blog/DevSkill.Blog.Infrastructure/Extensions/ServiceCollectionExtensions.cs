@@ -6,13 +6,7 @@ using DevSkill.Blog.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using DevSkill.Blog.Domain.Utilities;
 using DevSkill.Blog.Infrastructure.Utilities;
 
@@ -23,6 +17,9 @@ namespace DevSkill.Blog.Infrastructure.Extensions
         public static void AddDependencyInjections(this IServiceCollection services)
         {
             services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<ITermsAndConditionsRepository, TermsAndConditionsRepository>();
             services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
             services.AddSingleton<IEmailUtility, EmailUtility>();
         }

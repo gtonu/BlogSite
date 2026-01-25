@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace DevSkill.Blog.Infrastructure.Repositories
 {
-    public class BlogPostRepository : Repository<BlogPost, Guid>, IBlogPostRepository
+    public class TermsAndConditionsRepository : Repository<TermsAndConditions, Guid>, ITermsAndConditionsRepository
     {
-        public BlogPostRepository(ApplicationDbContext context) 
+        public TermsAndConditionsRepository(ApplicationDbContext context) 
             : base(context)
         {
         }

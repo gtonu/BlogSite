@@ -4,6 +4,7 @@ using DevSkill.Blog.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevSkill.Blog.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260123122224_CreateCategoriesAndTagsTables")]
+    partial class CreateCategoriesAndTagsTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,36 +47,6 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                     b.ToTable("BlogPosts");
                 });
 
-            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.BlogPostCategory", b =>
-                {
-                    b.Property<Guid>("BlogPostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("BlogPostId", "CategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("BlogPostCategories", (string)null);
-                });
-
-            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.BlogPostTag", b =>
-                {
-                    b.Property<Guid>("BlogPostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TagId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("BlogPostId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("BlogPostTags", (string)null);
-                });
-
             modelBuilder.Entity("DevSkill.Blog.Domain.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -102,21 +75,6 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
-                });
-
-            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.TermsAndConditions", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TermsAndConditions");
                 });
 
             modelBuilder.Entity("DevSkill.Blog.Infrastructure.Identity.BlogSiteRole", b =>
@@ -331,44 +289,6 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.BlogPostCategory", b =>
-                {
-                    b.HasOne("DevSkill.Blog.Domain.Entities.BlogPost", "BlogPost")
-                        .WithMany("Categories")
-                        .HasForeignKey("BlogPostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DevSkill.Blog.Domain.Entities.Category", "Category")
-                        .WithMany("BlogPosts")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BlogPost");
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.BlogPostTag", b =>
-                {
-                    b.HasOne("DevSkill.Blog.Domain.Entities.BlogPost", "BlogPost")
-                        .WithMany("Tags")
-                        .HasForeignKey("BlogPostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DevSkill.Blog.Domain.Entities.Tag", "Tag")
-                        .WithMany("BlogPosts")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BlogPost");
-
-                    b.Navigation("Tag");
-                });
-
             modelBuilder.Entity("DevSkill.Blog.Infrastructure.Identity.BlogSiteRoleClaim", b =>
                 {
                     b.HasOne("DevSkill.Blog.Infrastructure.Identity.BlogSiteRole", null)
@@ -418,23 +338,6 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.BlogPost", b =>
-                {
-                    b.Navigation("Categories");
-
-                    b.Navigation("Tags");
-                });
-
-            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("BlogPosts");
-                });
-
-            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.Tag", b =>
-                {
-                    b.Navigation("BlogPosts");
                 });
 #pragma warning restore 612, 618
         }

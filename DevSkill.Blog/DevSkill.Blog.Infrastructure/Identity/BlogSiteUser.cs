@@ -13,7 +13,7 @@ namespace DevSkill.Blog.Infrastructure.Identity
         public string? CountryDialCode { get; set; }
         public override bool PhoneNumberConfirmed { get => base.PhoneNumberConfirmed; set => base.PhoneNumberConfirmed = value; }
         public DateTime RegistrationDate { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        //public DateTime DateOfBirth { get; set; }
 
     }
 }
