@@ -1,6 +1,7 @@
 ﻿using Cortex.Mediator;
-using DevSkill.Blog.Application.Features.Post.Commands;
+using DevSkill.Blog.Application.Features.Post.Commands.BlogCommand;
 using DevSkill.Blog.Domain.Entities;
+using DevSkill.Blog.Domain.Utilities.DataTable;
 using DevSkill.Blog.Web.Areas.Admin.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -45,9 +46,9 @@ namespace DevSkill.Blog.Web.Areas.Admin.Controllers
             }
             return RedirectToAction();
         }
-        public IActionResult GetBlogs()
+        public JsonResult GetBlogs()
         {
-            return View();
+            return Json(DataTables.EmptyResult);
         }
     }
 }

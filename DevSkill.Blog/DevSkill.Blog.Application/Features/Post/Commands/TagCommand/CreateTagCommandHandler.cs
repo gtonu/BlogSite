@@ -5,7 +5,7 @@ using MapsterMapper;
 
 
 
-namespace DevSkill.Blog.Application.Features.Post.Commands
+namespace DevSkill.Blog.Application.Features.Post.Commands.TagCommand
 {
     public class CreateTagCommandHandler : ICommandHandler<CreateTagCommand, Tag>
     {

@@ -1,10 +1,12 @@
 ﻿using Cortex.Mediator;
-using DevSkill.Blog.Application.Features.Post.Commands;
+using DevSkill.Blog.Application.Features.Post.Commands.CategoryCommand;
+using DevSkill.Blog.Application.Features.Post.Queries.CategoryQuery;
 using DevSkill.Blog.Domain.Entities;
 using DevSkill.Blog.Web.Areas.Admin.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
 
 namespace DevSkill.Blog.Web.Areas.Admin.Controllers
 {
@@ -46,6 +48,31 @@ namespace DevSkill.Blog.Web.Areas.Admin.Controllers
                 return RedirectToAction();
             }
             return View(model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetCategories([FromBody] GetCategoriesModel model)
+        {
+            var query = new GetCategoriesQuery();
+            query.SearchText = model.Search.Value;
+            query.SortOrder = model.FormatSortExpression("CategoryName");
+            query.PageIndex = model.PageIndex;
+            query.PageSize = model.PageSize;
+
+            var (items,total,totalDisplay) = 
+                await _mediator.SendQueryAsync<GetCategoriesQuery, (IList<Category>, int, int)>(query);
+            var categories = new
+            {
+                recordsTotal = total,
+                recordsFiltered = totalDisplay,
+                data = (from item in items
+                        select new string[]
+                        {
+                            HttpUtility.HtmlEncode(item.CategoryName),
+                            item.Id.ToString(),
+                        }).ToArray()
+            };
+            return Json(categories);
+
         }
     }
 }

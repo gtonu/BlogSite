@@ -15,8 +15,4 @@
     <ProjectReference Include="..\DevSkill.Blog.Domain\DevSkill.Blog.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Post\Queries\" />
-  </ItemGroup>
-
 </Project>

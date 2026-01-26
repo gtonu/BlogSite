@@ -2,7 +2,7 @@
 using DevSkill.Blog.Domain.Entities;
 
 
-namespace DevSkill.Blog.Application.Features.Post.Commands
+namespace DevSkill.Blog.Application.Features.Post.Commands.TagCommand
 {
     public class CreateTagCommand : ICommand<Tag>
     {

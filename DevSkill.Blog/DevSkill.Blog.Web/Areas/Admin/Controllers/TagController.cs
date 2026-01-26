@@ -1,9 +1,11 @@
 ﻿using Cortex.Mediator;
-using DevSkill.Blog.Application.Features.Post.Commands;
+using DevSkill.Blog.Application.Features.Post.Commands.TagCommand;
+using DevSkill.Blog.Application.Features.Post.Queries.TagQuery;
 using DevSkill.Blog.Domain.Entities;
 using DevSkill.Blog.Web.Areas.Admin.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
 
 namespace DevSkill.Blog.Web.Areas.Admin.Controllers
 {
@@ -44,6 +46,30 @@ namespace DevSkill.Blog.Web.Areas.Admin.Controllers
                 return RedirectToAction();
             }
             return View(model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetTags([FromBody] GetTagsModel model)
+        {
+            var query = new GetTagsQuery();
+            query.PageIndex = model.PageIndex;
+            query.PageSize = model.PageSize;
+            query.SortOrder = model.FormatSortExpression("TagName");
+            query.SearchText = model.Search.Value;
+
+            var (items,total,totalDisplay) = await _mediator.SendQueryAsync<GetTagsQuery, (IList<Tag>, int, int)>(query);
+
+            var tags = new
+            {
+                recordsTotal = total,
+                recordsFiltered = totalDisplay,
+                data = (from item in items
+                        select new string[]
+                        {
+                            HttpUtility.HtmlEncode(item.TagName),
+                            item.Id.ToString()
+                        }).ToArray()
+            };
+            return Json(tags);
         }
     }
 }

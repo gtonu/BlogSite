@@ -5,7 +5,7 @@ using DevSkill.Blog.Domain.Utilities;
 using MapsterMapper;
 
 
-namespace DevSkill.Blog.Application.Features.Post.Commands
+namespace DevSkill.Blog.Application.Features.Post.Commands.BlogCommand
 {
     public class CreateBlogPostCommandHandler : ICommandHandler<CreateBlogPostCommand, BlogPost>
     {

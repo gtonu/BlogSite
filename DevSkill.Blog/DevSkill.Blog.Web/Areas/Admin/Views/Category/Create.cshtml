@@ -98,10 +98,10 @@
     </div>
 
     <div class="container-fluid">
-        <table id="products" class="table table-hover table-success table-striped-columns">
+        <table id="categories" class="table table-hover table-success table-striped-columns">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>CategoryName</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -109,7 +109,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th>Name</th>
+                    <th>CategoryName</th>
                     <th>Actions</th>
                 </tr>
             </tfoot>
@@ -123,12 +123,24 @@
     <script>
         $(function()
         {
-            $("#products").DataTable({
-                processing:true,
-                serverside:false,
-                responsive:true,
-                lengthChange:true,
-                autoWidth:false,
+            $("#categories").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                ajax: {
+                    url: "/Admin/Category/GetCategories",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function(d){
+                        d.SearchItem = {
+
+                        };
+                        return JSON.stringify(d);
+                    },
+                },
                 columnDefs:[
                     {
                         orderable: false,

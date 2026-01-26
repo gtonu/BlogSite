@@ -3,7 +3,7 @@ using DevSkill.Blog.Domain;
 using DevSkill.Blog.Domain.Entities;
 using MapsterMapper;
 
-namespace DevSkill.Blog.Application.Features.Post.Commands
+namespace DevSkill.Blog.Application.Features.Post.Commands.CategoryCommand
 {
     public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryCommand, Category>
     {

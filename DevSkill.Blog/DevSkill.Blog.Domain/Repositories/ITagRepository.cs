@@ -9,5 +9,6 @@ namespace DevSkill.Blog.Domain.Repositories
 {
     public interface ITagRepository : IRepository<Tag,Guid>
     {
+        Task<(IList<Tag>, int, int)> GetTagsListAsync(int pageIndex, int pageSize, string? searchText, string? sortOrder);
     }
 }

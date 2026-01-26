@@ -16,5 +16,9 @@ namespace DevSkill.Blog.Infrastructure.Repositories
             : base(context)
         {
         }
+        public async Task<(IList<Tag>,int,int)> GetTagsListAsync(int pageIndex,int pageSize,string? searchText,string? sortOrder)
+        {
+            return await GetDynamicAsync(x => x.TagName.Contains(searchText), sortOrder, null, pageIndex, pageSize);
+        }
     }
 }

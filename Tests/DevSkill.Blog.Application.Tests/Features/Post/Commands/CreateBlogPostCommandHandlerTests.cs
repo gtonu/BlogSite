@@ -1,5 +1,5 @@
 ﻿using Autofac.Extras.Moq;
-using DevSkill.Blog.Application.Features.Post.Commands;
+using DevSkill.Blog.Application.Features.Post.Commands.BlogCommand;
 using DevSkill.Blog.Domain;
 using DevSkill.Blog.Domain.Entities;
 using DevSkill.Blog.Domain.Repositories;

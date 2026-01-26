@@ -145,7 +145,7 @@
                 <form asp-antiforgery="true" asp-area="Admin" asp-controller="Blog"
                       asp-action="Create" enctype="multipart/form-data">
                     <!--begin::Table-->
-                    <table id="products" class="table table-hover table-success table-striped-columns">
+                    <table id="blogs" class="table table-hover table-success table-striped-columns">
                         <thead>
                             <tr>
                                 <th>Title</th>
@@ -199,12 +199,24 @@
     <script>
         $(function()
         {
-            $("#products").DataTable({
+            $("#blogs").DataTable({
                 processing:true,
-                serverside:false,
+                serverSide:true,
                 responsive:true,
                 lengthChange:true,
                 autoWidth:false,
+                ajax:{
+                    url:"/Admin/Blog/GetBlogs",
+                    type:"POST",
+                    contentType:"application/json",
+                    dataType:"json",
+                    data:function(d){
+                        d.SearcItem = {
+
+                        };
+                        return JSON.stringify(d);
+                    },
+                },
                 columnDefs:[
                     {
                         orderable: false,

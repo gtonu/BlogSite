@@ -1,5 +1,5 @@
 using Cortex.Mediator.DependencyInjection;
-using DevSkill.Blog.Application.Features.Post.Commands;
+using DevSkill.Blog.Application.Features.Post.Commands.BlogCommand;
 using DevSkill.Blog.Domain.Email;
 using DevSkill.Blog.Infrastructure;
 using DevSkill.Blog.Infrastructure.Data;

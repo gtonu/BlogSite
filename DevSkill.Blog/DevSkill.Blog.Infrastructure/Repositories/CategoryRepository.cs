@@ -12,5 +12,11 @@ namespace DevSkill.Blog.Infrastructure.Repositories
             : base(context)
         {
         }
+
+        public async Task<(IList<Category>,int total,int totalDisplay)> GetCategoryListAsync(int pageIndex,int pageSize,
+            string? searchText,string? sortOrder)
+        {
+            return await GetDynamicAsync(x => x.CategoryName.Contains(searchText), sortOrder, null, pageIndex, pageSize);
+        }
     }
 }
