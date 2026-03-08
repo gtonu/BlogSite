@@ -1,0 +1,262 @@
+﻿@model GetCategoriesModel
+@{
+    ViewData["Title"] = "CreateCategory";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css" />
+}
+
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb breadcrumb-style1">
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
+            </li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+    </nav>
+
+    <!-- Header Action Bar -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">
+            <span class="text-muted fw-light">Manage /</span> Tags List
+        </h4>
+        <div class="d-flex gap-2">
+            <button class="btn rounded-pill btn-outline-secondary"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample"
+                    aria-expanded="false"
+                    aria-controls="collapseExample">
+                <i class="bx bx-filter-alt me-1"></i> Filter
+            </button>
+            <a asp-area="Admin" asp-controller="Category" asp-action="Create"
+               class="btn rounded-pill btn-primary">
+                <i class="bx bx-plus me-1"></i> Create New
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="collapse mb-4" id="collapseExample">
+        <div class="card shadow-none border">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-9">
+                        <label asp-for="SearchItem.CategoryName" class="form-label">Category Name</label>
+                        <input type="text" asp-for="SearchItem.CategoryName" class="form-control" placeholder="Enter category name to search..." />
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button type="submit" class="btn btn-info" id="filterButton">
+                            <i class="bx bx-search me-1"></i> Apply Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header d-flex justify-content-between align-items-center bg-primary py-3">
+            <h5 class="card-title mb-0 text-white">
+                <i class="bx bx-tag-alt me-2 text-primary"></i>Categories
+            </h5>
+        </div>
+
+        <div class="table-responsive text-nowrap">
+            <table id="categories" class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4 py-3 text-uppercase fw-bold small text-muted" style="letter-spacing: 1px;">CategoryName</th>
+                        <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 150px; letter-spacing: 1px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    <!-- DataTables will inject rows here -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="ps-4 py-3 text-uppercase fw-bold small text-muted" style="letter-spacing: 1px;">CategoryName</th>
+                        <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 150px; letter-spacing: 1px;">Actions</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Modal Section (Classes updated for Sneat Modal Style) -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel1">Edit Category</h2>
+                    <button type="button"
+                            class="rounded-pill btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <form id="edit-form" action="" method="post" asp-antiforgery="true">
+                        <input type="hidden" id="edit-id" name="Id" />
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="CategoryName" class="form-label">CategoryName</label>
+                                <input type="text" id="edit-name" name="CategoryName" class="form-control" placeholder="Enter category name" />
+                                <span class="text-danger-small" id="categoryName-validation"></span>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn rounded-pill btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-success" id="save-button">
+                        <i class="fa-solid fa-floppy-disk" style="color: #1b1d1d;"></i>Save changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_DeleteModalPartial" />
+</div>
+
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+    <script>
+        $(function()
+        {
+            $("#categories").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                searching:false,
+                ajax: {
+                    url: "/Admin/Category/GetCategories",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function(d){
+                        d.SearchItem = {
+                            CategoryName: $("#SearchItem_CategoryName").val()
+                        };
+                        return JSON.stringify(d);
+                    },
+                },
+                columnDefs:[
+                    {
+                        targets: 0, // First column (Name)
+                        className: "ps-4 fw-medium text-heading"
+                    },
+                    {
+                        orderable: false,
+                        targets: 1,
+                        className: "text-center pe-4",
+                        render: function (data, type, row) {
+                            return `
+                                <div class="d-inline-block">
+                                    <button type="submit" class="btn rounded-pill btn-dark btn-sm edit-bs-modal" data-id='${data}' value='${data}'>
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </button>
+                                    <button type="submit" class="btn rounded-pill btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </div>`;
+                        }
+                    },
+                ]
+            });
+
+            $("#categories").on("click",".edit-bs-modal",function(){
+                //these two lines clears the previous shown Error message if any
+                $("#categoryName-validation").text("");
+                $("#edit-name").removeClass("is-invalid");
+
+                let id = $(this).data("id");
+                $.getJSON(`/admin/category/edit/${id}`, function (data) {
+                    $("#edit-id").val(data.id);
+                    $("#edit-name").val(data.categoryName);
+                    $("#editModal").modal('show');
+                });
+  
+            });
+
+            function validateCategoryName(){
+                let categoryNameInput = $("#edit-name");
+                let errorSpan = $("#categoryName-validation");
+                let nameInput = categoryNameInput.val();
+
+                //clear the previous shown Error message if any
+                errorSpan.text("");
+                categoryNameInput.removeClass("is-invalid");
+
+                //checking if categoryName is empty or not
+                if(nameInput.length === 0){
+                    errorSpan.text("CategoryName is required");
+                    categoryNameInput.addClass("is-invalid");
+                    categoryNameInput.focus();
+                    return false;
+                }
+                return true;
+            }
+
+            $(document).on("click", "#save-button", function () {
+              //client side validation
+              if(!validateCategoryName()){
+                  return;
+              }
+              const form = $("#edit-form");
+                $.ajax({
+                    url: "/admin/category/edit",
+                    type: "POST",
+                    data: form.serialize(), 
+                    success: function () {
+                        $("#editModal").modal("hide");
+                        $("#categories").DataTable().ajax.reload(null, false);
+                    }
+                });
+            });
+
+
+            $("#categories").on("click",".show-bs-modal",function(){
+                let id = $(this).data("id");
+                let deleteModal = $("#deleteModal");
+                deleteModal.find('.modal-body p').text(`Do you really want to delete this category?`);
+                $("#delete-id").val(id);
+                $("#delete-form").attr("action","/admin/category/delete");
+                deleteModal.modal('show');
+            });
+
+            $("#delete-button").click(function()
+            {
+                $("#delete-form").submit();
+            });
+
+            $("#filterButton").click(function(){
+                $("#categories").DataTable().ajax.reload(null,false);
+            });
+
+        });
+    </script>
+}
+
+
+
+
+
+

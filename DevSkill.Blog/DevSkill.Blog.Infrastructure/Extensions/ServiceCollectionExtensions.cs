@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using DevSkill.Blog.Domain.Utilities;
 using DevSkill.Blog.Infrastructure.Utilities;
+using DevSkill.Blog.Infrastructure.Identity.Interfaces;
 
 namespace DevSkill.Blog.Infrastructure.Extensions
 {
@@ -18,10 +19,15 @@ namespace DevSkill.Blog.Infrastructure.Extensions
         {
             services.AddScoped<IBlogPostRepository, BlogPostRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IContactUsRepository, ContactUsRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITermsAndConditionsRepository, TermsAndConditionsRepository>();
+            services.AddScoped<IBlogSiteUserRepository, BlogSiteUserRepository>();
+            services.AddScoped<IUserReportRepository, UserReportRepository>();
             services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
+            services.AddScoped<ApplicationUnitOfWork>();
             services.AddSingleton<IEmailUtility, EmailUtility>();
+            services.AddKeyedSingleton<IEmailUtility, HtmlEmailUtility>("Authentication");
         }
         public static void AddApplicationDbContext(this IServiceCollection services,
             string connectionString,Assembly migrationAssembly)
@@ -59,6 +65,87 @@ namespace DevSkill.Blog.Infrastructure.Extensions
                 options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
+
+                //SignIn settings.
+                options.SignIn.RequireConfirmedAccount = true;
+            });
+        }
+
+        public static void AddPolicy(this IServiceCollection service)
+        {
+            service.AddAuthorization(options =>
+            {
+                //category controller policies
+                options.AddPolicy("CanViewCategory", policy =>
+                {
+                    policy.RequireClaim("Category", "Index");
+                });
+                options.AddPolicy("CanCreateCategory", policy =>
+                {
+                    policy.RequireClaim("Category", "Create");
+                });
+                options.AddPolicy("CanEditCategory", policy =>
+                {
+                    policy.RequireClaim("Category", "Edit");
+                });
+                options.AddPolicy("CanDeleteCategory", policy =>
+                {
+                    policy.RequireClaim("Category", "Delete");
+                });
+
+                //TagController policies
+                options.AddPolicy("CanViewTag", policy =>
+                {
+                    policy.RequireClaim("Tag", "Index");
+                });
+                options.AddPolicy("CanCreateTag", policy =>
+                {
+                    policy.RequireClaim("Tag", "Create");
+                });
+                options.AddPolicy("CanEditTag", policy =>
+                {
+                    policy.RequireClaim("Tag", "Edit");
+                });
+                options.AddPolicy("CanDeleteTag", policy =>
+                {
+                    policy.RequireClaim("Tag", "Delete");
+                });
+
+                //ContactUsController policies
+                options.AddPolicy("CanViewContactUs", policy =>
+                {
+                    policy.RequireClaim("ContactUs", "Index");
+                });
+                options.AddPolicy("CanEditContactUs", policy =>
+                {
+                    policy.RequireClaim("ContactUs", "Edit");
+                });
+                options.AddPolicy("CanReplyContactUs", policy =>
+                {
+                    policy.RequireClaim("ContactUs", "Reply");
+                });
+                options.AddPolicy("CanDeleteContactUs", policy =>
+                {
+                    policy.RequireClaim("ContactUs", "Delete");
+                });
+
+                //TermsAndConditionsController policies
+                options.AddPolicy("CanViewTermsAndConditons", policy =>
+                {
+                    policy.RequireClaim("TermsAndConditions", "Index");
+                });
+                options.AddPolicy("CanCreateTermsAndConditons", policy =>
+                {
+                    policy.RequireClaim("TermsAndConditions", "Create");
+                });
+                options.AddPolicy("CanEditTermsAndConditons", policy =>
+                {
+                    policy.RequireClaim("TermsAndConditions", "Edit");
+                });
+                options.AddPolicy("CanDeleteTermsAndConditons", policy =>
+                {
+                    policy.RequireClaim("TermsAndConditions", "Delete");
+                });
             });
         }
     }

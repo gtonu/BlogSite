@@ -1,0 +1,31 @@
+﻿@model CreateBlogModel
+@{
+    ViewData["Title"] = "CreateBlog";
+    Layout = "_BlogAreaLayout2";
+}
+
+<div class="card text-center border-dark rounded-2">
+    <div class="card-header bg-transparent border-bottom border-dark font-weight-bold">
+        Create a blog to write your posts
+    </div>
+    <div class="card-body">
+        <form class="form-control" asp-antiforgery="true" asp-area="" asp-controller="BlogArea" asp-action="CreateBlog">
+            <h5 class="card-title font-weight-bold" style="font-family: 'Playfair Display', serif;">
+                Give your blog a name
+            </h5>
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-4">
+                    <input type="text"
+                           class="form-control border-dark rounded-pill"
+                           placeholder="e.g:"
+                           style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;border-top-right-radius: 50px; border-bottom-right-radius: 50px;"
+                           asp-for="BlogName">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-brand rounded-pill px-4">Create</button>
+        </form>
+        
+    </div>
+</div>
+
+

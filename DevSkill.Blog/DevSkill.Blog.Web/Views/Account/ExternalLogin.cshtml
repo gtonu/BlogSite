@@ -2,32 +2,58 @@
 @model ExternalLoginModel
 @{
     ViewData["Title"] = "Register";
+    Layout = "_AuthenticationLayout";
 }
 
-<h1>@ViewData["Title"]</h1>
-<h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
-<hr />
+<div class="card shadow-none">
+    <div class="card-body">
+        <!-- Logo / Brand Section -->
+        <div class="app-brand justify-content-center mb-4 mt-2">
+            <a asp-controller="Home" asp-action="Index" class="app-brand-link gap-2">
+                <span class="app-brand-logo demo">
+                    
+                </span>
+                <span class="app-brand-text demo text-body fw-bolder text-capitalize">ShareThought</span>
+            </a>
+        </div>
+        <!-- /Logo -->
 
-<p id="external-login-description" class="text-info">
-    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
-</p>
+        <h4 class="mb-2">Link your account 🚀</h4>
+        <p class="mb-4">
+            Successfully authenticated with <span class="fw-bold text-primary">@Model.ProviderDisplayName</span>.
+            Please confirm your email to complete the registration.
+        </p>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-antiforgery="true" asp-area="" asp-action="ExternalLoginConfirmation" asp-controller="Account" 
-         asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Email" class="form-control" autocomplete="email" placeholder="Please enter your email." />
-                <label asp-for="Email" class="form-label"></label>
-                <span asp-validation-for="Email" class="text-danger"></span>
+        <form id="external-login-form" asp-antiforgery="true" asp-area="" asp-action="ExternalLoginConfirmation"
+              asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2 small" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email Address</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                    <input asp-for="Email" class="form-control" placeholder="name@example.com" autofocus />
+                </div>
+                <span asp-validation-for="Email" class="text-danger small"></span>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+
+            <div class="mb-3">
+                <button class="btn btn-primary d-grid w-100 py-2 rounded-pill" type="submit">
+                    Finish Registration
+                </button>
+            </div>
         </form>
+
+        <p class="text-center mt-3">
+            <span>Already have an account?</span>
+            <a asp-action="Login" asp-controller="Account">
+                <span>Sign in instead</span>
+            </a>
+        </p>
     </div>
 </div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -14,54 +14,46 @@
         <!-- /Search -->
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
-            <!-- Place this tag where you want the button to render. -->
             <!-- User -->
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="~/sneat/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                        <!-- Profile Image -->
+                        <img src="~/sneat/assets/img/illustrations/man-with-laptop-light.png" alt="profile" class="w-px-40 h-auto rounded-circle border border-2 border-primary" />
                     </div>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <!-- Section 1: User Info Header -->
                     <li>
-                        <a class="dropdown-item align-middle" href="#">
-                            <!-- this section shows the username -->
-                            @if (SignInManager.IsSignedIn(User))
-                            {
-                                <span class="align-middle">
-                                    <a class="fw-semibold d-block" asp-area="Identity"
-                                       asp-page="/Account/Manage/Index"
-                                       title="Manage">
-                                        @User.Identity?.Name!
-                                    </a>
-                                </span>
-                                <small class="text-muted">Admin</small>
-                            }
-                        </a>
+                        <div class="dropdown-item py-3">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar avatar-online">
+                                        <img src="~/sneat/assets/img/illustrations/man-with-laptop-light.png" alt="profile" class="w-px-40 h-auto rounded-circle border border-2 border-primary" />
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        <span class="fw-semibold d-block">@User.Identity?.Name!</span>
+                                        <small class="text-muted">Administrator</small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     </li>
+
                     <li>
-                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-divider my-1"></div>
                     </li>
+
+                    <!-- Section 3: Logout -->
                     <li>
-                        <a class="dropdown-item" href="#">
-                            <i class="bx bx-user me-2"></i>
-                            <span class="align-middle">My Profile</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <i class="bx bx-cog me-2"></i>
-                            <span class="align-middle">Settings</span>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="dropdown-divider"></div>
-                    </li>
-                    <li class="nav-item">
-                        <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout"
+                        <form class="m-0" asp-area="" asp-controller="Account" asp-action="Logout"
                               asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                            <button type="submit" class="nav-link btn btn-link text-danger">
-                                <i class="bx bx-power-off me-2"></i>Logout
+                            <button type="submit" class="dropdown-item text-danger d-flex align-items-center w-100 border-0 bg-transparent">
+                                <i class="bx bx-power-off me-2"></i>
+                                <span class="align-middle">Log Out</span>
                             </button>
                         </form>
                     </li>
@@ -69,5 +61,6 @@
             </li>
             <!--/ User -->
         </ul>
+
     </div>
 </nav>

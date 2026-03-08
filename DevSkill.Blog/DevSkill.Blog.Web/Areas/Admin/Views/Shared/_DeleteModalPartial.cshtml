@@ -1,0 +1,26 @@
+﻿
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel1">Delete user</h2>
+                <button type="button"
+                        class="rounded-pill btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <p>Are you sure, you want to delete?</p>
+                <form id="delete-form" action="" method="post" asp-antiforgery="true">
+                    <input type="hidden" id="delete-id" value="" name="id" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn rounded-pill btn-outline-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" id="delete-button" class="btn rounded-pill btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

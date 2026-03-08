@@ -1,0 +1,31 @@
+﻿using Cortex.Mediator.Commands;
+using DevSkill.Blog.Domain;
+using DevSkill.Blog.Domain.Entities;
+using MapsterMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DevSkill.Blog.Application.Features.Post.Commands.CategoryCommand
+{
+    public class EditCategoryCommandHandler : ICommandHandler<EditCategoryCommand, Category>
+    {
+        private readonly IApplicationUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public EditCategoryCommandHandler(IApplicationUnitOfWork unitOfWork,IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+        public async Task<Category> Handle(EditCategoryCommand command, CancellationToken cancellationToken)
+        {
+            var category = _mapper.Map<Category>(command);
+            await _unitOfWork.CategoryRepository.EditAsync(category);
+            await _unitOfWork.SaveAsync();
+
+            return category;
+        }
+    }
+}

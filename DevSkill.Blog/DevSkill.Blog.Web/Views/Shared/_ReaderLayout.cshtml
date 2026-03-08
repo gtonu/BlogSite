@@ -1,0 +1,179 @@
+﻿@inject SignInManager<BlogSiteUser> SignInManager
+@inject UserManager<BlogSiteUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ShareThought - personal blog</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font awesome icons -->
+    <script src="https://kit.fontawesome.com/c2f8684575.js" crossorigin="anonymous"></script>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/BlogSite/BlogArea/css/adminlte.min.css">
+    @await RenderSectionAsync("Styles", required: false)
+    <link rel="stylesheet" href="~/BlogSite/css/customSyles.css">
+
+</head>
+<body class="hold-transition layout-top-nav">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-light bg-white border-bottom sticky-top shadow-sm w-100">
+            <div class="container-fluid px-4">
+
+                <!-- Left: Brand Logo -->
+                <div class="d-flex align-items-center">
+                    <a href="/" class="navbar-brand d-flex align-items-center mr-0" style="color: #FF7900; font-family: 'Playfair Display', serif;">
+                        <i class="fa-solid fa-feather-pointed mr-2"></i>
+                        <span class="font-weight-bold" style="letter-spacing: -1px;">ShareThought</span>
+                    </a>
+                </div>
+
+                <!-- Center: Navigation Sections (Centered using mx-auto) -->
+                <ul class="navbar-nav mx-auto d-none d-md-flex align-items-center">
+                    <li class="nav-item mx-3">
+                        <a class="nav-link text-muted hover-orange font-weight-500" asp-controller="Home" asp-action="Blogs" style="font-size: 0.9rem;">
+                            Blogs
+                        </a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link text-muted hover-orange font-weight-500" asp-controller="Home" asp-action="Categories" style="font-size: 0.9rem;">
+                            Topics
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Right: Actions & Profile -->
+                <ul class="navbar-nav ml-0 align-items-center">
+                    <!-- Write Button -->
+                    <li class="nav-item mr-3 d-none d-sm-block">
+                        <a class="nav-link text-muted hover-orange font-weight-500" asp-controller="Blog" asp-action="Create">
+                            <i class="fa-regular fa-pen-to-square mr-1" style="color: #FF7900;"></i> Write
+                        </a>
+                    </li>
+
+                    <!-- Profile Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link p-0 d-flex flex-column align-items-center justify-content-center"
+                           data-toggle="dropdown" href="#" style="min-width: 65px;">
+                            <div class="profile-img-wrapper mb-1">
+                                <img src="/Profile/user.png" class="img-circle border" alt="Account"
+                                     style="width: 34px; height: 34px; object-fit: cover; border-color: #eee !important;">
+                            </div>
+                            <span class="text-dark font-weight-600" style="font-size: 0.7rem; line-height: 1;">
+                                @(User.Identity.IsAuthenticated? User.Identity.Name : "Guest")
+                            </span>
+                        </a>
+
+                        <!-- ... Dropdown menu content remains exactly as before ... -->
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right border-0 shadow-lg mt-2 rounded-lg overflow-hidden">
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <div class="px-4 py-3 border-bottom bg-light">
+                                    <div class="d-flex align-items-center">
+                                        <img src="/Profile/user.png" class="img-circle mr-3 border" style="width: 40px; height: 40px;">
+                                        <div style="line-height: 1.2;">
+                                            <span class="d-block font-weight-bold text-dark">@User.Identity.Name</span>
+                                            <span class="small text-muted">@User.Identity.Name?.ToLower()@@sharethought.com</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="py-2">
+                                    
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-controller="Home" asp-action="ContactUs">Help center</a>
+                                    <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-controller="Home" asp-action="Privacy">Privacy policy</a>
+                                </div>
+                                <div class="p-3 border-top">
+                                    <form asp-controller="Account" asp-action="Logout" method="post">
+                                        <button type="submit" class="btn btn-outline-danger btn-block btn-sm rounded-pill">
+                                            <i class="fa-solid fa-power-off mr-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="p-4 text-center">
+                                    <h6 class="font-weight-bold mb-3">Join ShareThought</h6>
+                                    <a asp-controller="Account" asp-action="Register" class="btn btn-brand btn-block btn-sm rounded-pill mb-2" style="background-color: #FF7900; color: white;">
+                                        Sign up
+                                    </a>
+                                    <a asp-controller="Account" asp-action="Login" class="btn btn-outline-dark btn-block btn-sm rounded-pill">
+                                        Sign in
+                                    </a>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="ContactUs">
+                                    Help center
+                                </a>
+                                <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                    Privacy policy
+                                </a>
+                                <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">
+                                    Terms &amp; Conditions
+                                </a>
+                            }
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+
+
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <!-- Main content -->
+            <section class="content">
+                @RenderBody()
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 3.2.0
+            </div>
+            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-light">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="~/BlogSite/BlogArea/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/BlogSite/BlogArea/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/BlogSite/BlogArea/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/BlogSite/BlogArea/js/demo.js"></script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

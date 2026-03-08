@@ -1,0 +1,259 @@
+﻿@model GetUsersModel
+
+﻿@{
+ViewData["Title"] = "Index";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css" />
+}
+
+
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb breadcrumb-style1">
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="User" asp-action="Index">User</a>
+            </li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+    </nav>
+    <!-- Header Action Bar -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">
+            <span class="text-muted fw-light">User Management /</span> Users List
+        </h4>
+        <button class="btn rounded-pill btn-outline-secondary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseExample"
+                aria-expanded="false"
+                aria-controls="collapseExample">
+            <i class="bx bx-filter-alt me-1"></i> Filter
+        </button>
+    </div>
+    <!-- /buttons section -->
+    <!-- Collapsed content block for advanced search form -->
+    <div class="collapse" id="collapseExample">
+        <div class="d-grid form-control p-3 border">
+            <!-- ROW 1: Text Inputs -->
+            <div class="row g-2">
+                <!-- Changed .col to .col-md-6 to take half width each on medium screens -->
+                <div class="form-group col-md-6 mb-3">
+                    <label asp-for="SearchItem.UserName" class="form-label">UserName</label>
+                    <input type="text" asp-for="SearchItem.UserName" class="form-control" placeholder="Enter user name" />
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label asp-for="SearchItem.Email" class="form-label">Email</label>
+                    <input type="text" asp-for="SearchItem.Email" class="form-control" placeholder="example@gmail.com" />
+                </div>
+            </div>
+
+            <!-- ROW 2: Radio and Dates -->
+            <div class="row g-3 align-items-end">
+                <!-- Added a wrapper col for the radio buttons to keep them together -->
+                <div class="col-md-4 mb-3">
+                    <label class="form-label d-block" asp-for="SearchItem.EmailConfirmed">Email confirmed?</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="SearchItem.EmailConfirmed" value="True" />
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="SearchItem.EmailConfirmed" value="False" />
+                        <label class="form-check-label">No</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 3: Button -->
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <button type="submit" class="btn rounded-pill btn-info" id="filterButton">Apply filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Collapsed content -->
+    <!-- Modal -->
+    <div class="modal fade" id="suspendModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel1">Suspend blog</h2>
+                    <button type="button"
+                            class="rounded-pill btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <p>Are you sure, you want to suspend this blog?</p>
+                    <form id="suspend-form" action="" method="post" asp-antiforgery="true">
+                        <input type="hidden" id="suspend-id" value="" name="id" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn rounded-pill btn-outline-secondary" data-bs-dismiss="modal">
+                        No
+                    </button>
+                    <button type="button" id="suspend-button" class="btn rounded-pill btn-outline-success">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Modal -->
+    <!-- begin::Datatable section -->
+    <!-- Main Content Table Card -->
+    <div class="card shadow-sm border-0">
+        <!-- Professional Eye-catchy Header -->
+        <div class="card-header d-flex justify-content-between align-items-center bg-primary py-3">
+            <h5 class="card-title mb-0 text-white">
+                <i class="bx bx-group me-2"></i> Registered Members
+            </h5>
+            <span class="badge bg-white text-primary rounded-pill">Total Accounts</span>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive text-nowrap">
+                <table id="users" class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">User Name</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">Email</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">EmailConfirmed</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">RegistrationDate</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">Blog</th>
+                            <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 120px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        <!-- DataTables Populated -->
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">User Name</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">Email</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">EmailConfirmed</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">RegistrationDate</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">Blog</th>
+                            <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 120px;">Actions</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- Bottom Accent -->
+        <div class="card-footer border-top-0 py-2 bg-light opacity-50"></div>
+    </div>
+    <!-- end::Datatable section -->
+</div>
+
+<!-- / Content -->
+@* @section Scripts
+{
+    <script>
+        $('#basicModal').on('show.bs.modal',function(){
+            $('#modalBody').load('/Admin/blog/create');
+        });
+    </script>
+} *@
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+    <script>
+        $(function()
+        {
+            $("#users").DataTable({
+                processing:true,
+                serverSide:true,
+                responsive:true,
+                lengthChange:true,
+                autoWidth:false,
+                searching:false,
+                ajax:{
+                    url:"/Admin/User/GetUsers",
+                    type:"POST",
+                    contentType:"application/json",
+                    dataType:"json",
+                    data:function(d){
+                        d.SearchItem = {
+                            UserName: $("#SearchItem_UserName").val(),
+                            Email: $("#SearchItem_Email").val(),
+                            EmailConfirmed: $("input[name='SearchItem.EmailConfirmed']:checked").length === 0 ? null :
+                                            $("input[name='SearchItem.EmailConfirmed']:checked").val() === "True"
+                        };
+                        return JSON.stringify(d);
+
+
+                    },
+                },
+                columnDefs:[
+                    {
+                        targets: 2,
+                        render: function(data, type, row){
+                            if(data == "True")
+                                return `<span class="badge rounded-pill bg-success">Yes</span>`;
+                            else
+                                return `<span class="badge rounded-pill bg-danger">No</span>`;
+                        }
+                    },
+                    {
+                        targets:4,
+                        orderable:false,
+                        render:function(data,type,row){
+                            console.log(data);
+                            return `<a class="dropdown-item d-flex align-items-center py-2 view-blog-btn" href="${data}" data-id='${data}'>
+                                        ${row[0]}
+                                    </a>`
+                        }
+                    },
+                    {
+                        orderable: false,
+                        targets: 5,
+                        render: function(data, type, row){
+                            return `
+                                    <button type="submit" class="btn rounded-pill btn-warning btn-sm" onclick="window.location.href='/admin/user/assignrole/${data}'" value='${data}'>
+                                        <i class="fa-regular fa-eye" style="color: #000000;"></i> Assign role
+                                    </button>
+                                    `;
+                        }
+                    }
+                ]
+            });
+
+            // $(document).on("click",".show-bs-modal",function(){
+            //     let id = $(this).data("id");
+            //     let isSuspended = $(this).data('suspended');
+            //     let suspendModal = $("#suspendModal");
+            //     if(isSuspended)
+            //     {
+            //         suspendModal.find('.modal-body p').text(`Do you really want to unsuspend this blog?`);
+            //     }
+            //     else
+            //     {
+            //         suspendModal.find('.modal-body p').text(`Do you really want to suspend this blog?`);
+            //     }
+                
+            //     $("#suspend-id").val(id);
+            //     suspendModal.modal('show');
+            // });
+
+            // $('#suspend-button').click(function(){
+            //     let isSuspended = ()
+            // });
+
+            
+
+            $("#filterButton").click(function(){
+                $("#users").DataTable().ajax.reload(null,false);
+            });
+
+        });
+    </script>
+}

@@ -1,0 +1,62 @@
+﻿@model GetBlogsModel
+@{
+    ViewData["Title"] = "Blogs";
+    Layout = "_ReaderLayout";
+}
+
+<div class="content-wrapper bg-white">
+    <div class="container pt-5 pb-5">
+
+        <!-- Header Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 font-weight-bold" style="font-family: 'Playfair Display', serif; color: #292929; letter-spacing: -1px;">
+                Explore Blogs
+            </h1>
+            <p class="text-muted lead">Discover specialized collections and unique perspectives.</p>
+        </div>
+
+        <!-- Blog Cards Grid -->
+        <div class="row justify-content-center">
+            @foreach (var blog in Model.Blogs)
+            {
+                <!-- Use px-3 to create horizontal gutter spacing and mb-5 for vertical breathing room -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch mb-5 px-3">
+                    <div class="card border-0 shadow-sm w-100 rounded-lg bg-white blog-hover-card"
+                         style="transition: all 0.3s ease; border: 1px solid #ebebeb !important;">
+
+                        <div class="card-body p-4 d-flex flex-column text-center">
+                            <!-- Icon/Brand Decor: Shifted to Black/Charcoal -->
+                            <div class="mb-3">
+                                <i class="fa-solid fa-feather-pointed" style="color: #212529; font-size: 1.5rem;"></i>
+                            </div>
+
+                            <!-- Blog Title -->
+                            <h3 class="card-title font-weight-bold mb-3 w-100"
+                                style="font-family: 'Playfair Display', serif; color: #212529; line-height: 1.2;">
+                                @blog.UserName
+                            </h3>
+
+                            <!-- Post Count: Monochromatic Badge -->
+                            <div class="mt-auto">
+                                <span class="badge badge-pill px-3 py-2"
+                                      style="background-color: #f8f9fa; color: #495057; font-weight: 600; font-size: 0.85rem; border: 1px solid #dee2e6;">
+                                    <i class="far fa-file-alt mr-1"></i> @blog.PostCount Posts
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer: Sleek Black Button -->
+                        <div class="card-footer bg-transparent border-0 pb-4 pt-0 text-center">
+                            <a asp-controller="Blog" asp-action="Published" asp-route-username="@blog.UserName"
+                               class="btn rounded-pill px-4 shadow-sm visit-blog-btn"
+                               style="background-color: #212529; color: #ffffff; border: none; font-weight: 500; transition: 0.3s;">
+                                Visit Blog &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

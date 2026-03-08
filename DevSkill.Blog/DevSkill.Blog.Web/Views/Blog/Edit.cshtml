@@ -1,0 +1,240 @@
+﻿@model EditBlogPostModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "_BlogAreaLayout2";
+}
+
+@section Styles
+{
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://unpkg.com/tiny-markdown-editor/dist/tiny-mde.min.css" />
+
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/BlogSite/BlogArea/plugins/select2/css/select2.min.css">
+}
+
+<form id="publish-form" action="" method="post" asp-antiforgery="true" enctype="multipart/form-data">
+    <div class="modal fade rounded-2" id="publishModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel1">Edit Category</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+
+                    <input type="hidden" asp-for="Id">
+                    <!-- category selector-->
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <select class="form-control select2 js-select-categories" asp-for="Categories" multiple="multiple">
+                            </select>
+                        </div>
+                    </div>
+                    <!-- tag selector-->
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <select class="form-control js-select-tags" asp-for="Tags" multiple="multiple">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" asp-for="Thumbnail">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <!-- Fixed: Changed data-bs-dismiss to data-dismiss -->
+                    <button type="button" class="btn rounded-pill btn-outline-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-outline-success" id="share-button2">
+                        <i class="fas fa-upload mr-2"></i> Share
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center pt-5">
+        <!-- Centered to match your navbar (col-lg-10) -->
+        <div class="col-lg-10 col-md-10 col-sm-12">
+
+            <!-- Top Toolbar: Perfectly aligned with content padding -->
+            <div class="d-flex justify-content-between align-items-center mb-4 px-4 pt-3">
+
+                <!-- Left side: Status (Refined Typography) -->
+                <div id="status-container">
+                    <span id="draftStatus" class="small text-muted font-weight-light" style="letter-spacing: 0.5px;">
+                        @* Content injected by JS *@
+                    </span>
+                </div>
+
+                <!-- Right side: Share Button (Brand Orange) -->
+                <div id="action-container">
+                    <button type="button"
+                            class="btn btn-brand btn-sm rounded-pill px-4 shadow-sm"
+                            id="share-button1"
+                            style="background-color: #FF7900; border: none; color: #fff; font-weight: 500; transition: all 0.3s ease;">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Save &amp; Share
+                    </button>
+                </div>
+            </div>
+
+            <!-- Writing Area -->
+            <div class="px-4">
+                <input type="hidden" asp-for="Title">
+                <input type="hidden" asp-for="Body">
+
+                <!-- Title Area: Uses Playfair Display to match Sidebar/Navbar -->
+                <textarea id="post-title"
+                          class="form-control bg-transparent border-0 mb-2"
+                          placeholder="Title"
+                          rows="1"
+                          oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+                          style="padding: 0; box-shadow: none; font-family: 'Playfair Display', serif !important;
+                             font-size: 3.5rem !important; font-weight: 700 !important; color: #292929;
+                             overflow: hidden; resize: none; line-height: 1.1; letter-spacing: -1px;"></textarea>
+
+                <!-- Body Editor Area: Clean and focused -->
+                <div id="editor" class="mt-4"
+                     style="font-family: 'Inter', sans-serif; font-size: 1.25rem !important;
+                        line-height: 1.8 !important; color: #333; border: none; outline: none;">
+                    @* Editor Content *@
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+{
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="~/BlogSite/BlogArea/plugins/select2/js/select2.full.min.js"></script>
+
+    <script>
+        
+
+        $(function(){
+            let postBody = $('#Body').val() || '';
+            const editor = new toastui.Editor({
+                el: document.querySelector('#editor'),
+                initialEditType: postBody ? 'markdown' : 'preview',
+                previewStyle: 'vertical',
+                height: '500px',
+                initialValue: postBody || '',
+                placeholder: postBody ? 'Write here' : '',
+                hideModeSwitch: !postBody
+            });
+
+            
+
+            fetch('/admin/category/getdropdowncategories')
+             .then(r => r.json())
+             .then(data => {
+                 $('.js-select-categories').select2({
+                    data:data.results,
+                    width:'100%',
+                    placeholder:'Select categories',
+                    tags:true,
+                    maximumSelectionLength:5
+                });
+             });
+            fetch('/admin/tag/getdropdowntags')
+             .then(r => r.json())
+             .then(data =>{
+                 $('.js-select-tags').select2({
+                    data:data.results,
+                    width:'100%',
+                    placeholder:'Select tags',
+                    tags:true,
+                    maximumSelectionLength:5
+                });
+             });
+
+            //shows image file name..
+            $(document).on('change', '.custom-file-input', function (e) {
+                var fileName = e.target.files[0].name;
+                $(this).next('.custom-file-label').html(fileName);
+            });
+
+
+            $('#post-title').on("input",function(){
+                $('#Title').val(this.value).trigger('input');
+            });
+
+            editor.on("change",function(){
+                $('#Body').val(editor.getMarkdown()).trigger('input');
+            });
+
+            let status = $('#draftStatus');
+            let draftId = $('#Id');
+            if(!draftId.val()){
+                draftId.val('00000000-0000-0000-0000-000000000000');
+            }
+            function createDraft(){
+                let token = $('input[name="__RequestVerificationToken"]').val();
+                console.log(token);
+                let data = {
+                    __RequestVerificationToken:token,
+                    Id:draftId.val(),
+                    Title:$('#Title').val(),
+                    Body:$('#Body').val()
+                };
+                console.log(data);
+                $.ajax({
+                    url:'/blog/draft',
+                    type:'POST',
+                    data:data,
+                    success:function(response)
+                    {
+                        draftId.val(response.draftId);
+                        status.text('Saved');
+                    }
+                });
+            };
+
+            let timer;
+            $('#Title,#Body').on('input',function(){
+                status.text('Saving..');
+                clearTimeout(timer);
+                timer = setTimeout(createDraft,2000);
+            });
+
+            // $(document).on('click','#share-button1',function(){
+            //     $("#publishModal").modal('show');
+            // });
+
+            //while editing don't letting users to update categories and tags..It will cause duplicate entries..
+            $(document).on('click','#share-button1',function(){
+                let formElement = $('#publish-form')[0];
+                let formData = new FormData(formElement);
+                $.ajax({
+                    url:'/blog/publish',
+                    type:'POST',
+                    data:formData,
+                    processData:false,
+                    contentType:false,
+                    success:function(response){
+                        $('#publishModal').modal('hide');
+                        window.location.href = response.redirectUrl;
+                    }
+                });
+            });
+
+        });
+
+
+    </script>
+}
+

@@ -54,21 +54,21 @@
                         </g>
                     </svg>
                 </span>
-                <span class="app-brand-text demo text-body fw-bolder">Sneat</span>
+                <span class="app-brand-text demo text-body fw-bolder">Share Thought</span>
             </a>
         </div>
         <!-- /Logo -->
-        <h4 class="mb-2">Welcome to Sneat! 👋</h4>
-        <p class="mb-4">Please sign-in to your account and start the adventure</p>
+        <h4 class="mb-2">Welcome to Share thought! 👋</h4>
+        <div asp-validation-summary="All" class="text-danger"></div>
 
         <form class="mb-3" asp-antiforgery="true" asp-area="" asp-controller="Account"
          asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" method="POST">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control"
-                       placeholder="Enter your email or username" asp-for="Email">
-                <label asp-for="Email">Email or username</label>
-                <span asp-validation-for="Email" class="text-danger"></span>
+                       placeholder="Enter your username" asp-for="UserName">
+                <label asp-for="UserName">Username</label>
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3 form-password-toggle">
                 <input type="password" asp-for="Password" class="form-control"
@@ -89,7 +89,7 @@
                 
             </div>
             <div class="mb-3">
-                <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                <button class="btn btn-brand d-grid w-100 text-white" type="submit">Sign in</button>
             </div>
         </form>
 

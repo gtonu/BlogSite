@@ -4,6 +4,6 @@ namespace DevSkill.Blog.Web.Areas.Admin.Models
 {
     public class GetCategoriesModel : DataTables
     {
-
+        public AdvancedCategorySearchModel? SearchItem { get; set; }
     }
 }

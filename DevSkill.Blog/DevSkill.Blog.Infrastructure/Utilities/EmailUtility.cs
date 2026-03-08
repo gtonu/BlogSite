@@ -3,7 +3,6 @@ using DevSkill.Blog.Domain.Utilities;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Client;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace DevSkill.Blog.Infrastructure.Utilities
     {
         private SmtpSettings _smtpSettings;
         private ILogger<EmailUtility> _logger;
-        public EmailUtility(IOptions<SmtpSettings> smtpSettings,ILogger<EmailUtility> logger)
+        public EmailUtility(IOptions<SmtpSettings> smtpSettings, ILogger<EmailUtility> logger)
         {
             _smtpSettings = smtpSettings.Value;
             _logger = logger;
@@ -29,7 +28,7 @@ namespace DevSkill.Blog.Infrastructure.Utilities
             message.To.Add(new MailboxAddress(receiverName, receiverEmail));
             message.Subject = emailSubject;
 
-            message.Body = new TextPart("html")
+            message.Body = new TextPart("plain")
             {
                 Text = emailBody
             };
@@ -40,13 +39,13 @@ namespace DevSkill.Blog.Infrastructure.Utilities
                     _smtpSettings.SmtpEncryption != SmtpEncryptionTypes.Normal);
                 client.Timeout = _smtpSettings.TimeOut;
 
-                if(!string.IsNullOrEmpty(_smtpSettings.Username))
+                if (!string.IsNullOrEmpty(_smtpSettings.Username))
                 {
                     try
                     {
                         await client.AuthenticateAsync(_smtpSettings.Username, _smtpSettings.Password);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         _logger.LogError(ex, "Failed to authenticate user credentials from email client");
                     }

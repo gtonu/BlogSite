@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace DevSkill.Blog.Web.Controllers
@@ -31,7 +29,7 @@ namespace DevSkill.Blog.Web.Controllers
             IUserStore<BlogSiteUser> userStore,
             SignInManager<BlogSiteUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailUtility emailUtility,
+            [FromKeyedServices("Authentication")]IEmailUtility emailUtility,
             IMapper mapper
             )
         {
@@ -42,6 +40,47 @@ namespace DevSkill.Blog.Web.Controllers
             _logger = logger;
             _emailUtility = emailUtility;
             _mapper = mapper;
+        }
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        public IActionResult Verify(string email=null,string returnUrl = null)
+        {
+            var model = new VerifyModel();
+            model.Email = email;
+            model.ReturnUrl = returnUrl;
+            return View(model);
+        }
+        [HttpPost,ValidateAntiForgeryToken]
+        public async Task<IActionResult> Verify(VerifyModel model)
+        {
+            model.ReturnUrl ??= Url.Content("~/");
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if(user == null || !user.EmailConfirmed)
+                return View(model);
+            if(model.ReturnUrl == "~/" || model.ReturnUrl.Contains("/Blog") || model.ReturnUrl.Contains('@'))
+            {
+                if(user.UserName.Contains('@'))
+                {
+                    var position = user.UserName.IndexOf('@');
+                    await _signInManager.SignInAsync(user, isPersistent: true);
+                    return RedirectToAction("Index", "Blog", new { username = user.UserName.Substring(0,position) });
+                }
+                else
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: true);
+                    return RedirectToAction("Index", "Blog", new { username = user.UserName });
+                }
+                
+            }
+            else
+            {
+                await _signInManager.SignInAsync(user, isPersistent: true);
+                return LocalRedirect(model.ReturnUrl);
+            }
+            
         }
         public async Task<IActionResult> RegisterAsync(string returnUrl = null)
         {
@@ -55,6 +94,7 @@ namespace DevSkill.Blog.Web.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterAsync(RegisterModel model)
         {
+            //_userManager.Options.SignIn.RequireConfirmedAccount = true;
             model.ReturnUrl ??= Url.Content("~/");
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -66,9 +106,11 @@ namespace DevSkill.Blog.Web.Controllers
                     user.PhoneNumberConfirmed = true;
                 }
 
-                await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
+                var userName = user.UserName;
+                await _userStore.SetUserNameAsync(user, userName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, model.Password);
+                
 
                 if (result.Succeeded)
                 {
@@ -83,12 +125,12 @@ namespace DevSkill.Blog.Web.Controllers
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = model.ReturnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailUtility.SendEmailAsync(model.FirstName,model.Email, "Confirm your email",
+                    await _emailUtility.SendEmailAsync(model.Email, model.UserName, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = model.Email, returnUrl = model.ReturnUrl });
+                        return RedirectToAction("Verify", new { email = model.Email, returnUrl = model.ReturnUrl });
                     }
                     else
                     {
@@ -134,11 +176,30 @@ namespace DevSkill.Blog.Web.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(model.ReturnUrl);
+                    var user = await _userManager.FindByNameAsync(model.UserName);
+                    if(model.ReturnUrl == "~/" || model.ReturnUrl.Contains('@') || model.ReturnUrl.Contains("/Blog"))
+                    {
+                        if(model.ReturnUrl.Contains('@'))
+                        {
+                            var position = user.UserName.IndexOf('@');
+                            _logger.LogInformation("User logged in.");
+                            return RedirectToAction("Index", "Blog", new { username = user.UserName.Substring(0,position) });
+                        }
+                        else
+                        {
+                            _logger.LogInformation("User logged in.");
+                            return RedirectToAction("Index", "Blog", new { username = user.UserName });
+                        }
+                        
+                    }
+                    else
+                    {
+                        _logger.LogInformation("User logged in.");
+                        return LocalRedirect(model.ReturnUrl);
+                    }
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -199,8 +260,27 @@ namespace DevSkill.Blog.Web.Controllers
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-                return LocalRedirect(model.ReturnUrl);
+                if (model.ReturnUrl == "~/" || model.ReturnUrl.Contains('@') || model.ReturnUrl.Contains("/Blog"))
+                {
+                    if (model.ReturnUrl.Contains('@'))
+                    {
+                        var position = info.Principal.Identity.Name.IndexOf('@');
+                        _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                        return RedirectToAction("Index", "Blog", new { username = info.Principal.Identity.Name.Substring(0, position) });
+                    }
+                    else
+                    {
+                        _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                        return RedirectToAction("Index", "Blog", new { username = info.Principal.Identity.Name});
+                    }
+
+                }
+                else
+                {
+                    _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                    return LocalRedirect(model.ReturnUrl);
+                }
+                
             }
             if (result.IsLockedOut)
             {
@@ -260,7 +340,7 @@ namespace DevSkill.Blog.Web.Controllers
                         // If account confirmation is required, we need to show the link if we don't have a real email sender
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
-                            return RedirectToPage("./RegisterConfirmation", new { Email = model.Email });
+                            return RedirectToAction("Verify", new { Email = model.Email , returnUrl = model.ReturnUrl });
                         }
 
                         await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
@@ -277,7 +357,7 @@ namespace DevSkill.Blog.Web.Controllers
             return View("ExternalLogin",model);
         }
 
-        public async Task<IActionResult> ConfirmEmailAsync(string userId, string code)
+        public async Task<IActionResult> ConfirmEmailAsync(string userId, string code,string returnUrl = null)
         {
             var model = new ConfirmEmailModel();
             if (userId == null || code == null)
@@ -294,6 +374,9 @@ namespace DevSkill.Blog.Web.Controllers
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
             model.StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            if (!result.Succeeded)
+                return RedirectToAction("Verify");
+            //await _signInManager.SignInAsync(user, isPersistent: false);
             return View();
         }
 
@@ -301,7 +384,7 @@ namespace DevSkill.Blog.Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ForgotPasswordAsync()
+        public IActionResult ForgotPassword()
         {
             var model = new ForgotPasswordModel();
             return View(model);
@@ -339,7 +422,7 @@ namespace DevSkill.Blog.Web.Controllers
 
             return View(model);
         }
-        public async Task<IActionResult> ResetPasswordAsync(string code = null)
+        public IActionResult ResetPassword(string code = null)
         {
             var model = new ResetPasswordModel();
             if (code == null)

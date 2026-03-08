@@ -1,0 +1,353 @@
+﻿@model GetReportsModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css" />
+}
+
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb breadcrumb-style1">
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Report" asp-action="Index">Report</a>
+            </li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+    </nav>
+    <!-- buttons section -->
+    <!-- /buttons section -->
+    <!-- Collapsed content block for advanced search form -->
+    <!-- /Collapsed content -->
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel1">Edit</h2>
+                    <button type="button"
+                            class="rounded-pill btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <form id="edit-form" action="" method="post" asp-antiforgery="true">
+                        <input type="hidden" id="edit-id" name="Id" />
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="SenderName" class="form-label">SenderName</label>
+                                <input type="text" id="edit-sender-name" name="SenderName" class="form-control" disabled />
+                                <span class="text-danger-small" id="edit-senderName-validation"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="SenderEmail" class="form-label">SenderEmail</label>
+                                <input type="text" id="edit-sender-email" name="SenderEmail" class="form-control" disabled />
+                                <span class="text-danger-small" id="edit-senderEmail-validation"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="Message" class="form-label">Message</label>
+                                <input type="text" id="edit-message-body" name="Message" class="form-control" disabled />
+                                <span class="text-danger-small" id="edit-message-body-validation"></span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="edit-recieved-date" name="ReceivedDate">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="Reply" class="form-label">Reply</label>
+                                <input type="text" id="edit-reply-body" name="Reply" class="form-control" disabled />
+                                <span class="text-danger-small" id="edit-reply-body-validation"></span>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input type="hidden" name="MarkAsRead" value="false">
+                            <input class="form-check-input" type="checkbox" name="MarkAsRead" id="edit-mark-as-read" value="true" checked>
+                            <label class="form-check-label" name="MarkAsRead" for="edit-mark-as-read">Mark as read</label>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn rounded-pill btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-success" id="save-button">
+                        <i class="fa-solid fa-floppy-disk" style="color: #1b1d1d;"></i>Save changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reply Modal -->
+    <div class="modal fade" id="replyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel1">Reply</h2>
+                    <button type="button"
+                            class="rounded-pill btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <form id="reply-form" action="" method="post" asp-antiforgery="true">
+                        <input type="hidden" id="reply-id" name="Id" />
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="SenderName" class="form-label">SenderName</label>
+                                <input type="text" id="reply-sender-name" name="SenderName" class="form-control" disabled />
+                                <span class="text-danger-small" id="reply-senderName-validation"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="SenderEmail" class="form-label">SenderEmail</label>
+                                <input type="text" id="reply-sender-email" name="SenderEmail" class="form-control" disabled />
+                                <span class="text-danger-small" id="reply-senderEmail-validation"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="Message" class="form-label">Message</label>
+                                <input type="text" id="reply-message-body" name="Message" class="form-control" disabled />
+                                <span class="text-danger-small" id="reply-message-body-validation"></span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="reply-recieved-date" name="ReceivedDate">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="Reply" class="form-label">Reply</label>
+                                <input type="text" id="reply-body" name="Reply" class="form-control" placeholder="write your reply here" />
+                                <span class="text-danger-small" id="reply-body-validation"></span>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input type="hidden" name="MarkAsRead" value="false">
+                            <input class="form-check-input" type="checkbox" name="MarkAsRead" id="reply-mark-as-read" value="true" checked>
+                            <label class="form-check-label" name="MarkAsRead" for="reply-mark-as-read">Mark as read</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn rounded-pill btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-success" id="reply-button">
+                        <i class="fa-solid fa-paper-plane" style="color: #22281f;"></i> Reply
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_DeleteModalPartial" />
+    <!-- /Modal -->
+    <!-- begin::Datatable section -->
+    <div class="card shadow-sm border-0">
+        <!-- Eye-catchy Header (Sneat Primary Style) -->
+        <div class="card-header d-flex justify-content-between align-items-center bg-primary py-3">
+            <h5 class="card-title mb-0 text-white">
+                <i class="bx bx-error-alt me-2"></i> Content Reports
+            </h5>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive text-nowrap">
+                <table id="reports" class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">Post URL</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">Report Reason</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">ReportedAt</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted text-center">Post Actions</th>
+                            <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center">Report Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        <!-- DataTables Populated -->
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">Post URL</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">Report Reason</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">ReportedAt</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted text-center">Post Actions</th>
+                            <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center">Report Actions</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- Bottom Accent -->
+        <div class="card-footer border-top-0 py-2 bg-light opacity-50"></div>
+    </div>
+    <!-- end::Datatable section -->
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+    <script>
+        $(function()
+        {
+            $("#reports").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                searching:false,
+                ajax: {
+                    url: "/Admin/Report/GetReports",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function(d){
+                        d.SearchItem = {
+
+                        };
+                        return JSON.stringify(d);
+                    },
+
+                },
+                columnDefs:[
+                    {
+                        orderable:false,
+                        targets: 0,
+                        render:function(data,type,row){
+                                  return `<a href='${data}' class="btn rounded-pill btn-info btn-sm" target="_blank">see post</a>`
+                        }
+                    },
+                    {
+                        orderable: false,
+                        targets: 3,
+                        className: "text-center align-middle", // Added classes for vertical centering
+                        render: function(data, type, row) {
+                            let isSuspended = (row[5] === 3 || row[5] === 'Suspended');
+                            console.log(row);
+                            console.log(isSuspended);
+                            let icon = isSuspended ? 'bx-lock-open-alt' : 'bx-lock-alt';
+                            let color = isSuspended ? 'text-success' : 'text-warning';
+                            let text = isSuspended ? 'Unsuspend post' : 'Suspend post';
+                                  return `
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow shadow-none border-0" data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded fs-4 text-muted"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end shadow-sm border">
+                                                    <a class="dropdown-item d-flex align-items-center py-2 suspend-post-btn" href="#" data-id='${data}' data-suspended='${isSuspended}'>
+                                                        <i class="bx ${icon} me-2 ${color}"></i> ${text}
+                                                    </a>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>`;
+                        }
+                    },
+                    {
+                        orderable: false,
+                        targets: 4,
+                        className: "text-center align-middle",
+                        render: function(data, type, row) {
+                            return `
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <div class="dropdown">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow shadow-none border-0" data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded fs-4 text-muted"></i>
+                                        </button>
+                                            <div class="dropdown-menu dropdown-menu-end shadow-sm border">
+                                                <a class="dropdown-item d-flex align-items-center py-2 show-bs-modal" href="javascript:void(0);" data-id='${data}'>
+                                                    <i class="bx bx-trash me-2 text-danger"></i> Delete report
+                                                </a>
+                                            </div>
+                                    </div>
+                                </div>`;
+                        }
+                    }
+
+                ]
+            });
+
+
+            $(document).on('click','.suspend-post-btn',function(e){
+                e.preventDefault();
+
+                let btn = $(this);
+                let token = $('input[name="__RequestVerificationToken"]').val();
+                if(!btn.data('suspended'))
+                {
+                    $.ajax({
+                        url:`/admin/report/suspendpost`,
+                        type:'POST',
+                        data:{
+                            postId:btn.data('id'),
+                            __RequestVerificationToken:token
+                        },
+                        success:function(response){
+                            if(response.success){
+                                if(!btn.data('suspended'))
+                                {
+                                    btn.html('<i class="bx bx-lock-open-alt me-2 text-success"></i> Unsuspend post');
+                                    btn.data('suspended',true);
+                                }
+
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    $.ajax({
+                        url:'/admin/report/unsuspendpost',
+                        type:'POST',
+                        data:{
+                            postId:btn.data('id'),
+                            __RequestVerificationToken:token
+                        },
+                        success:function(response){
+                            if(response.success){
+                                if(btn.data('suspended'))
+                                {
+                                    btn.html('<i class="bx bx-lock-alt me-2 text-warning"></i> Suspend post');
+                                    btn.data('suspended',false);
+                                }
+                            }
+                        }
+                    });
+                }
+
+            });
+
+            $(document).on('click','.show-bs-modal',function(e){
+                e.preventDefault();
+
+                let id = $(this).data('id');
+                let deleteModal = $('#deleteModal');
+                deleteModal.find('.modal-body p').text(`Do you really want to delete this category?`);
+                $("#delete-id").val(id);
+                $("#delete-form").attr("action","/admin/report/delete");
+                deleteModal.modal('show');
+            });
+
+            $("#delete-button").click(function()
+            {
+                $("#delete-form").submit();
+            });
+
+        });
+    </script>
+}
+

@@ -1,0 +1,151 @@
+﻿@model AssignUserRoleModel
+@{
+    ViewData["Title"] = "CreateCategory";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css" />
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Header & Breadcrumb -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0">
+                <span class="text-muted fw-light">Assign /</span> Role
+            </h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-style1 mb-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Users" asp-action="Index">User</a>
+                    </li>
+                    <li class="breadcrumb-item active">Assign</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <!-- Main Create Form Card -->
+                <div class="card shadow-sm mb-5">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-primary py-3">
+                        <h5 class="card-title mb-0 text-white">
+                            <i class="bx bx-pen me-2"></i><strong>Assign Role</strong>
+                        </h5>
+                    </div>
+
+                    <form asp-antiforgery="true" asp-area="Admin" asp-controller="User"
+                          asp-action="AssignRole" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <!-- Validation Summary -->
+                            <div asp-validation-summary="All" class="alert alert-warning alert-dismissible mb-4" role="alert">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-5">
+                                    <label asp-for="UserName" class="form-label text-uppercase fw-bold small">User Name</label>
+                                    <select class="form-select bg-light" asp-for="UserName" disabled>
+                                        <option selected>@Model.UserName</option>
+                                    </select>
+                                    <span asp-validation-for="UserName" class="text-danger small"></span>
+                                    <input type="hidden" asp-for="UserName">
+                                </div>
+
+                                <div class="col-md-5">
+                                    <label asp-for="RoleName" class="form-label text-uppercase fw-bold small">Assign Role</label>
+                                    <select class="form-select" asp-for="RoleName">
+                                        <option selected disabled>-- select a role --</option>
+                                        @{
+                                            if ((Model.Roles?.Count ?? 0) == 0)
+                                            {
+                                                <option value="">Empty</option>
+                                            }
+                                            else
+                                            {
+                                                @foreach (var role in Model.Roles!)
+                                                {
+                                                    <option value="@role.Name">@role.Name</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Roles" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer border-top bg-light d-flex justify-content-end py-3">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="bx bx-check-circle me-1"></i> Assign
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Existing Roles Table Card -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header border-bottom py-3">
+                        <h5 class="card-title mb-0 text-muted">
+                            <i class="bx bx-list-ul me-2"></i>Existing Categories
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive text-nowrap">
+                            <table id="roles" class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">Category Name</th>
+                                        <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 150px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    <!-- DataTables Populated -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+    <script>
+        $(function()
+        {
+            $("#categories").DataTable({
+                processing: true,
+                serverSide: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                
+                columnDefs:[
+                    {
+                        orderable: false,
+                        targets: 1,
+                        render: function(data, type, row){
+                            return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/product/edit/${data}'" value='${data}'>
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </button>
+                                    <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>`;
+                        }
+                    }
+                ]
+            })
+
+        });
+    </script>
+}
+
+
+
+

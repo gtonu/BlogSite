@@ -1,0 +1,19 @@
+﻿@model VerifyModel
+
+@{
+    ViewData["Title"] = "Confirm";
+    Layout = "_AuthenticationLayout";
+}
+
+<div class="card text-center mb-3" style="width: 18rem;">
+    <form asp-antiforgery="true" asp-area="" asp-controller="Account" asp-action="Verify"
+          asp-route-returnUrl="@Model.ReturnUrl" class="form-control">
+        <div class="card-body">
+            <input type="hidden" asp-for="Email" value="@Model.Email">
+            <p class="card-text">Please verify your email to proceed</p>
+            <button type="submit" class="btn btn-brand rounded-pill text-white">Proceed</button>
+        </div>
+    </form>
+    
+</div>
+

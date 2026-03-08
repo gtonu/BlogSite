@@ -1,0 +1,28 @@
+services:
+    web:
+        build: 
+            context: .
+            dockerfile: DevSkill.BLog.Web/Dockerfile
+        image: devskill.blog
+        env_file: 
+            - DevSkill.Blog.Web/web.env
+        volumes:
+            - devskillWeb-thumbnails:/app/wwwroot/thumbnails
+        ports:
+            - "8000:80"
+        entrypoint: ["dotnet", "DevSkill.Blog.Web.dll"]
+    db:
+        build: 
+            context: .
+            dockerfile: DevSkill.Blog.Db/Dockerfile
+        image: "devskill.blog.sqlserver"
+        env_file: 
+            - DevSkill.Blog.Db/db.env
+        expose:
+            - "1432"
+        ports: 
+            - "1432:1433"
+volumes:
+    devskillWeb-thumbnails:
+      external: true
+     

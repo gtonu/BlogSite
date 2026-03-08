@@ -29,15 +29,28 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Body")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ThumbnailName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -87,6 +100,99 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ab05a84d-ffe6-4125-81c4-1ced18cf95e1"),
+                            CategoryName = "Web Development"
+                        },
+                        new
+                        {
+                            Id = new Guid("6e9532ad-9883-4fc3-a0ed-992683c179d8"),
+                            CategoryName = "Networking"
+                        },
+                        new
+                        {
+                            Id = new Guid("31be253f-245c-4653-8bbc-f3fa46c14071"),
+                            CategoryName = "JavaScript"
+                        },
+                        new
+                        {
+                            Id = new Guid("9d9b8e74-d010-432f-9203-5eed53f7b611"),
+                            CategoryName = "Software engineering"
+                        });
+                });
+
+            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CommentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ParentCommentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.ContactUs", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("MarkAsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReceivedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RepliedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reply")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactUs");
                 });
 
             modelBuilder.Entity("DevSkill.Blog.Domain.Entities.Tag", b =>
@@ -102,6 +208,23 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("d478015c-b35b-41c7-8dde-07699be0f1d3"),
+                            TagName = "mvc"
+                        },
+                        new
+                        {
+                            Id = new Guid("03f0eb39-ba69-4a83-9e3a-9606cdfb7104"),
+                            TagName = "asp.net"
+                        },
+                        new
+                        {
+                            Id = new Guid("c8560ef7-c037-4b2f-8ce9-b82fc89eb7d4"),
+                            TagName = "Ajax"
+                        });
                 });
 
             modelBuilder.Entity("DevSkill.Blog.Domain.Entities.TermsAndConditions", b =>
@@ -114,9 +237,47 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("TermsAndConditions");
+                });
+
+            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.UserReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("BlogStatus")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PostStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Report")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReportedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserReports");
                 });
 
             modelBuilder.Entity("DevSkill.Blog.Infrastructure.Identity.BlogSiteRole", b =>
@@ -145,6 +306,15 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("23fe4e81-5015-42a0-8d76-d1f08c6b227a"),
+                            ConcurrencyStamp = "23fe4e81-5015-42a0-8d76-d1f08c6b227a",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("DevSkill.Blog.Infrastructure.Identity.BlogSiteRoleClaim", b =>
@@ -197,12 +367,6 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -250,6 +414,25 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("605fbeb7-f2bc-4d2c-886d-08de6c1b8c01"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "bfb063fb-c852-4248-bd51-6c8e56f3e1bf",
+                            Email = "admin@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@GMAIL.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFF00oytfTeMeV0LotTISYwoFEu+ngUmsBx4nHUnRh7xSdc1e9aVj6p4VGmRY4HWZg==",
+                            PhoneNumberConfirmed = false,
+                            RegistrationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "GDOC34LIOZXWECAJBPLLACWMF2CBR6GH",
+                            TwoFactorEnabled = false,
+                            UserName = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("DevSkill.Blog.Infrastructure.Identity.BlogSiteUserClaim", b =>
@@ -310,6 +493,13 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("605fbeb7-f2bc-4d2c-886d-08de6c1b8c01"),
+                            RoleId = new Guid("23fe4e81-5015-42a0-8d76-d1f08c6b227a")
+                        });
                 });
 
             modelBuilder.Entity("DevSkill.Blog.Infrastructure.Identity.BlogSiteUserToken", b =>
@@ -369,6 +559,24 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("DevSkill.Blog.Domain.Entities.Comment", "ParentComment")
+                        .WithMany("Replies")
+                        .HasForeignKey("ParentCommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DevSkill.Blog.Domain.Entities.BlogPost", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParentComment");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("DevSkill.Blog.Infrastructure.Identity.BlogSiteRoleClaim", b =>
                 {
                     b.HasOne("DevSkill.Blog.Infrastructure.Identity.BlogSiteRole", null)
@@ -424,12 +632,19 @@ namespace DevSkill.Blog.Infrastructure.Data.Migrations
                 {
                     b.Navigation("Categories");
 
+                    b.Navigation("Comments");
+
                     b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("DevSkill.Blog.Domain.Entities.Category", b =>
                 {
                     b.Navigation("BlogPosts");
+                });
+
+            modelBuilder.Entity("DevSkill.Blog.Domain.Entities.Comment", b =>
+                {
+                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("DevSkill.Blog.Domain.Entities.Tag", b =>

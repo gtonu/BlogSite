@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_BlogAreaLayout2";
+}
+
+<!-- Content Wrapper. Contains page content -->
+    <!-- Hero Section: Welcome & Motivation -->
+    <section class="content-header pt-5 pb-4">
+        <div class="container col-lg-10">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h1 class="display-4 font-weight-bold text-dark mb-3" style="letter-spacing: -1.5px;">
+                        Welcome back, <span style="color: #FF7900;">@User.Identity?.Name</span>.
+                    </h1>
+                    <p class="lead text-muted mb-4" style="font-family: 'Georgia', serif; font-style: italic;">
+                        "A thought shared is a spark ignited." What’s on your mind today?
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a asp-controller="Blog" asp-action="Create" class="btn btn-lg shadow-sm px-4 rounded-pill"
+                           style="background-color: #FF7900; color: white; border: none;">
+                            <i class="fa-solid fa-feather-pointed mr-2"></i>Start Writing
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-5 d-none d-md-block text-right">
+                    <!-- Subtle Abstract Illustration or Decorative Element -->
+                    <i class="fa-solid fa-quote-left text-light" style="font-size: 12rem; position: absolute; right: 10%; opacity: 0.1;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content: Stats & Quick Actions -->
+    <section class="content">
+        <div class="container col-lg-10">
+            <div class="row">
+                <!-- Feature: About ShareThought -->
+                <div class="col-md-8 mb-4">
+                    <div class="card border-0 shadow-sm rounded-lg h-100" style="background-color: #f8f9fa;">
+                        <div class="card-body p-4">
+                            <h5 class="font-weight-bold mb-3">What is ShareThought?</h5>
+                            <p class="text-muted">
+                                We believe in the power of raw, unfiltered ideas. ShareThought is a sanctuary for writers to document their journey, share insights, and connect with a community that values depth over clicks.
+                            </p>
+                            <div class="row mt-4">
+                                <div class="col-sm-4">
+                                    <i class="fa-solid fa-shield-halved mb-2" style="color: #FF7900;"></i>
+                                    <h6 class="small font-weight-bold">Privacy First</h6>
+                                </div>
+                                <div class="col-sm-4">
+                                    <i class="fa-solid fa-wand-magic-sparkle mb-2" style="color: #FF7900;"></i>
+                                    <h6 class="small font-weight-bold">Minimal Editor</h6>
+                                </div>
+                                <div class="col-sm-4">
+                                    <i class="fa-solid fa-users-rays mb-2" style="color: #FF7900;"></i>
+                                    <h6 class="small font-weight-bold">Open Minds</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ 
+            </div>
+
+            <!-- Placeholder for Recent Activity/Drafts -->
+            <div class="mt-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="font-weight-bold" style="letter-spacing: -0.5px;">Pick up where you left off</h3>
+                    <a asp-controller="Blog" asp-action="Drafts" class="text-muted small font-weight-bold text-uppercase">View all drafts →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+

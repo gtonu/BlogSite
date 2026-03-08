@@ -1,6 +1,82 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
+    Layout = "_BlogSiteLayout";
 }
-<h1>@ViewData["Title"]</h1>
+<div class="container-fluid pt-5 pb-5">
+    <div class="row justify-content-center">
+        <!-- Optimized for long-form reading comfort -->
+        <div class="col-12 col-md-10 col-lg-8">
 
-<p>Use this page to detail your site's privacy policy.</p>
+            <article class="privacy-content shadow-sm p-5 bg-white border rounded-lg" style="border-color: #f0f0f0 !important;">
+
+                <header class="mb-5 border-bottom pb-4">
+                    <h1 class="display-4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #212529; letter-spacing: -1.5px;">
+                        Privacy Policy
+                    </h1>
+                    <p class="text-muted small text-uppercase font-weight-bold" style="letter-spacing: 2px;">
+                        Effective Date: February 2026
+                    </p>
+                </header>
+
+                <section class="privacy-body" style="font-family: 'Inter', system-ui, -apple-system, sans-serif; line-height: 1.8; color: #333;">
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">1. Introduction</h3>
+                        <p>This Privacy Policy explains how the Site collects, uses, stores, and protects personal information in connection with the operation of this blog platform. This Policy applies to all users, readers, and contributors who access or use the Site.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">2. Information We Collect</h3>
+                        <p>The Site may collect the following categories of information:</p>
+                        <ul class="pl-4">
+                            <li><strong>Personal Information</strong>: Such as name, email address, or username when voluntarily provided (e.g., during registration or content submission).</li>
+                            <li><strong>Usage Data</strong>: Including IP address, browser type, device information, pages visited, and timestamps.</li>
+                            <li><strong>Content Data</strong>: Information and materials voluntarily submitted by users, including blog posts and comments.</li>
+                        </ul>
+                        <p class="mt-2 small text-muted font-italic">The Site does not intentionally collect sensitive personal data unless explicitly required by law.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">3. Use of Information</h3>
+                        <p>Collected information may be used to operate, maintain, and improve the Site; moderate content and enforce Terms and Conditions; and protect the security and integrity of the platform.</p>
+                    </div>
+
+                    <div class="mb-5 border-left pl-4 py-2 bg-light rounded">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">4. Cookies and Tracking</h3>
+                        <p>The Site may use cookies to enhance user experience and analyze traffic. Users may control or disable cookies through their browser settings; however, some features may not function properly as a result.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">5. Data Storage and International Hosting</h3>
+                        <p>The Site may be hosted on third-party infrastructure providers such as <strong>Amazon Web Services (AWS)</strong> or <strong>Microsoft Azure</strong>. As a result, user data may be stored or processed on servers located outside your country of residence, including outside Bangladesh.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">6. Data Sharing and Disclosure</h3>
+                        <p>The Site does not sell or rent personal data. Information may be disclosed only to comply with applicable laws, court orders, or to protect the rights and safety of the public or the platform.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">7. Data Security</h3>
+                        <p>Reasonable technical and organizational measures are implemented to protect user information. However, no method of transmission over the internet or electronic storage is 100% secure.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">8. User Rights</h3>
+                        <p>Depending on applicable law, users may have the right to request access to, correction of, or deletion of their personal data. Requests may be submitted through the Site’s designated contact channels.</p>
+                    </div>
+
+                </section>
+
+                <footer class="mt-5 pt-4 border-top text-center">
+                    <p class="mb-0 small text-muted">For more information, please 
+                        <a asp-controller="Home" asp-action="ContactUs" asp-area="">contact our support team</a>.
+                    </p>
+                    <p class="mb-0 small text-muted mt-2 font-weight-bold">&copy; 2026 ShareThought Platform</p>
+                </footer>
+
+            </article>
+
+        </div>
+    </div>
+</div>

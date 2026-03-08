@@ -1,8 +1,31 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "_BlogSiteLayout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Hero Wrapper with brand background -->
+<div class="jumbotron jumbotron-fluid border-bottom border-dark py-5 mb-0" style="background-color: #FFFF;min-height:40vh;width:80vw !important">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <!-- Massive Serif Headline -->
+                <h1 class="display-2 font-weight-bold mb-4" style="font-family: 'Playfair Display', serif; line-height: 0.95;">
+                    Stay Erudite.
+                </h1>
+                <p class="lead mb-5 w-75" style="font-size: 1.5rem; line-height: 1.2;">
+                    Dive deep into <strong>musings</strong>,stories and expertise from writers on any topic.
+                </p>
+                <!-- Rounded Pill CTA -->
+                <a asp-area="" asp-controller="Home" asp-action="Blogs" 
+                class="btn btn-brand rounded-pill px-5 py-3 font-weight-bold" style="font-size: 1.1rem;">
+                    Dive in
+                </a>
+            </div>
+            <!-- Optional: Abstract brand illustration/animation column -->
+            <div class="col-lg-4 text-center">
+                <img src="~/BlogSite/SiteLogo/ShareThought.jpg" class="img-fluid" alt="Alternate Text" />
+            </div>
+        </div>
+    </div>
 </div>
+

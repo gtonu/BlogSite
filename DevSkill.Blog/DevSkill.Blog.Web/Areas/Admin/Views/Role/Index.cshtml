@@ -1,0 +1,273 @@
+﻿@model GetRolesModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css" />
+}
+
+
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb breadcrumb-style1">
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Role" asp-action="Index">Role</a>
+            </li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+    </nav>
+    <!-- buttons section -->
+    <!-- Header Action Bar -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">
+            <span class="text-muted fw-light">Content /</span> Blog List
+        </h4>
+        <div class="d-flex gap-2">
+            <button class="btn rounded-pill btn-outline-secondary"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample"
+                    aria-expanded="false">
+                <i class="bx bx-filter-alt me-1"></i> Filter
+            </button>
+            <a asp-area="Admin" asp-controller="Role" asp-action="Create"
+               class="btn rounded-pill btn-primary">
+                <i class="bx bx-plus-circle me-1"></i> Create
+            </a>
+        </div>
+    </div>
+    <!-- /buttons section -->
+    <!-- Collapsed content block for advanced search form -->
+    <div class="collapse" id="collapseExample">
+        <div class="d-grid form-control p-3 border">
+            <!-- ROW 1: Text Inputs -->
+            <div class="row g-2">
+                <!-- Changed .col to .col-md-6 to take half width each on medium screens -->
+                <div class="form-group col-md-6 mb-3">
+                    <label asp-for="SearchItem.Name" class="form-label">Name</label>
+                    <input type="text" asp-for="SearchItem.Name" class="form-control" placeholder="Enter role name" />
+                </div>
+                
+            </div>
+
+            <!-- ROW 2: Button -->
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <button type="submit" class="btn rounded-pill btn-info" id="filterButton">Apply filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Collapsed content -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel1">Edit Role</h2>
+                    <button type="button"
+                            class="rounded-pill btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <form id="edit-form" action="" method="post" asp-antiforgery="true">
+                        <input type="hidden" id="edit-id" name="Id" />
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="Name" class="form-label">RoleName</label>
+                                <input type="text" id="edit-name" name="Name" class="form-control" placeholder="Enter role name" />
+                                <span class="text-danger-small" id="roleName-validation"></span>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn rounded-pill btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-success" id="save-button">
+                        <i class="fa-solid fa-floppy-disk" style="color: #1b1d1d;"></i>Save changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <partial name="_DeleteModalPartial" />
+    <!-- /Modal -->
+    <!-- begin::Datatable section -->
+    <div class="card shadow-sm border-0">
+        <!-- Professional Primary Header -->
+        <div class="card-header d-flex justify-content-between align-items-center bg-primary py-3">
+            <h5 class="card-title mb-0 text-white">
+                <i class="bx bx-news me-2"></i> Roles
+            </h5>
+            <span class="badge bg-white text-primary rounded-pill">Management</span>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive text-nowrap">
+                <table id="roles" class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">Name</th>
+                            <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        <!-- DataTables Populated -->
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">Name</th>
+                            <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 150px;">Actions</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- Bottom Accent -->
+        <div class="card-footer border-top-0 py-2 bg-light opacity-50"></div>
+    </div>
+    <!-- end::Datatable section -->
+</div>
+
+<!-- / Content -->
+@* @section Scripts
+{
+    <script>
+        $('#basicModal').on('show.bs.modal',function(){
+            $('#modalBody').load('/Admin/blog/create');
+        });
+    </script>
+} *@
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+    <script>
+        $(function()
+        {
+            $("#roles").DataTable({
+                processing:true,
+                serverSide:true,
+                responsive:true,
+                lengthChange:true,
+                autoWidth:false,
+                searching:false,
+                ajax:{
+                    url:"/Admin/Role/GetRoles",
+                    type:"POST",
+                    contentType:"application/json",
+                    dataType:"json",
+                    data:function(d){
+                        d.SearchItem = {
+                            Name: $("#SearchItem_Name").val()
+                        };
+                        return JSON.stringify(d);
+                    },
+                },
+                columnDefs:[
+                    {
+                        orderable: false,
+                        targets: 1,
+                        render: function(data, type, row){
+                            return `<button type="submit" class="btn rounded-pill btn-dark btn-sm edit-bs-modal" data-id='${data}' value='${data}'>
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </button>
+                                    <button type="submit" class="btn rounded-pill btn-warning btn-sm" onclick="window.location.href='/admin/product/edit/${data}'" value='${data}'>
+                                        <i class="fa-regular fa-eye" style="color: #000000;"></i> Manage Permissions
+                                    </button>
+                                    <button type="submit" class="btn rounded-pill btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>`;
+                        }
+                    }
+                ]
+            });
+
+            $("#roles").on("click",".edit-bs-modal",function(){
+                //these two lines clears the previous shown Error message if any
+                $("#roleName-validation").text("");
+                $("#edit-name").removeClass("is-invalid");
+
+                let id = $(this).data("id");
+                $.getJSON(`/admin/role/edit/${id}`, function (data) {
+                    $("#edit-id").val(data.id);
+                    $("#edit-name").val(data.name);
+                    $("#editModal").modal('show');
+                });
+
+            });
+
+            function validateRoleName(){
+                let roleNameInput = $("#edit-name");
+                let errorSpan = $("#roleName-validation");
+                let nameInput = roleNameInput.val();
+
+                //clear the previous shown Error message if any
+                errorSpan.text("");
+                roleNameInput.removeClass("is-invalid");
+
+                //checking if roleName is empty or not
+                if(nameInput.length === 0){
+                    errorSpan.text("RoleName is required");
+                    roleNameInput.addClass("is-invalid");
+                    roleNameInput.focus();
+                    return false;
+                }
+                return true;
+            }
+
+            $(document).on("click", "#save-button", function () {
+              //client side validation
+              if(!validateRoleName()){
+                  return;
+              }
+
+              const form = $("#edit-form");
+                $.ajax({
+                    url: "/admin/role/edit",
+                    type: "POST",
+                    data: form.serialize(),
+                    success: function () {
+                        $("#editModal").modal("hide");
+                        $("#roles").DataTable().ajax.reload(null, false);
+                    }
+                });
+            });
+
+            $("#roles").on("click",".show-bs-modal",function(){
+                let id = $(this).data("id");
+                let deleteModal = $("#deleteModal");
+                deleteModal.find('.modal-body p').text(`Do you really want to delete this role?`);
+                $("#delete-id").val(id);
+                $("#delete-form").attr("action","/admin/role/delete");
+                deleteModal.modal('show');
+            });
+
+            $("#delete-button").click(function()
+            {
+                $("#delete-form").submit();
+            });
+
+            $("#filterButton").click(function(){
+                $("#roles").DataTable().ajax.reload(null,false);
+            });
+
+        });
+    </script>
+}
+
+
+

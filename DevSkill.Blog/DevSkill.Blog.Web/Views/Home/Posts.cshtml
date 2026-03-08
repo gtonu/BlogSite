@@ -1,0 +1,156 @@
+﻿@model GetBlogPostsWithCategoriesModel
+@{
+    ViewData["Title"] = "Posts";
+    Layout = "_ReaderLayout";
+}
+
+<div class="container-fluid pt-5">
+    <div class="row justify-content-center">
+        <!-- Main Content Area -->
+        <div class="col-12 col-md-10 col-lg-8">
+
+            <!-- Feed Header -->
+            <div class="d-flex align-items-baseline mb-5 border-bottom pb-3">
+                <h2 class="font-weight-bold mr-3 text-dark" style="font-family: 'Playfair Display', serif; letter-spacing: -1px;">
+                    Refining your feed
+                </h2>
+                <span class="text-muted small text-uppercase letter-spacing-1">
+                    Based on your topics
+                </span>
+            </div>
+
+            <!-- The Feed -->
+            <div class="post-feed">
+                @if (Model.BlogPosts?.Count > 0)
+                {
+                    foreach (var post in Model.BlogPosts)
+                    {
+                        <!-- Reusing your specific Card Design -->
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10 col-md-10 col-sm-12">
+                                <!-- Card: Standardized height to match thumbnail -->
+                                <div class="card border-0 border-bottom mb-5 bg-transparent shadow-none w-100" style="transition: opacity 0.3s ease;">
+                                    <div class="row no-gutters align-items-stretch">
+                                        <!-- Added align-items-stretch -->
+                                        <!-- Main Content Area: Left side -->
+                                        <div class="col-8 col-md-9">
+                                            <!-- d-flex flex-column h-100 is the key to pushing content to the bottom -->
+                                            <div class="card-body pl-0 pt-0 pb-0 d-flex flex-column h-100">
+
+                                                <!-- Top: Title Section -->
+                                                <a class="read-post-btn text-decoration-none" asp-controller="Blog" asp-action="Read"
+                                                   asp-route-username="@post.UserName" asp-route-id="@post.Url" data-id="@post.Url">
+                                                    <h2 class="card-title font-weight-bold h3 text-dark mb-2 post-title-hover"
+                                                        style="font-family: 'Playfair Display', serif; line-height: 1.3;">
+                                                        @post.Title
+                                                    </h2>
+                                                </a>
+
+                                                <!-- Middle: Spacer or Body snippet could go here -->
+                                                <div class="flex-grow-1"></div>
+
+                                                <!-- Bottom: Meta row (Date on left, Actions on right) -->
+                                                <div class="d-flex align-items-end justify-content-between mt-3">
+
+                                                    <!-- Date on the Left -->
+                                                    <span class="text-muted small pb-1">
+                                                        <i class="far fa-calendar-alt mr-1"></i> @post.PublishedAt.ToString("MMM dd, yyyy")
+                                                    </span>
+
+                                                    <!-- Action Stack on the Right -->
+                                                    <div class="d-flex flex-column align-items-end">
+
+                                                        <!-- Dropdown: Positioned directly above Read More -->
+                                                        <div class="dropdown dropleft mb-1">
+                                                            <button class="btn btn-link text-muted p-0" type="button" id="cardMenu-@post.Id"
+                                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-decoration: none;">
+                                                                <i class="fas fa-ellipsis-h" style="font-size: 1.1rem;"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right border-0 shadow-lg rounded-lg" aria-labelledby="cardMenu-@post.Id">
+                                                                <a class="dropdown-item py-2 copy-link-button" href="#" data-id="@post.Url">
+                                                                    <i class="far fa-copy mr-2"></i> Copy link
+                                                                </a>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Read More on the Bottom Right -->
+                                                        <a asp-controller="Blog" asp-action="Read" asp-route-username="@post.UserName" asp-route-id="@post.Url"
+                                                           class="btn btn-sm btn-link text-dark font-weight-bold read-post-btn p-0" data-id="@post.Url">
+                                                            Read More &rarr;
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Thumbnail Area: Right side -->
+                                        <div class="col-4 col-md-3 text-right">
+                                            <img src="/thumbnails/@(post?.ThumbnailName ?? "ShareThought.jpg")"
+                                                 class="rounded shadow-sm"
+                                                 alt="Thumbnail"
+                                                 style="object-fit: cover; height: 140px; width: 100%; max-width: 200px;">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="fa-solid fa-face-selection text-muted mb-3" style="font-size: 3rem;"></i>
+                        <h4 class="text-muted">No posts found for your topics yet.</h4>
+                        <a href="/explore" class="btn btn-brand rounded-pill mt-3 px-4" style="background-color: #FF7900; color: white;">Explore More Topics</a>
+                    </div>
+                }
+            </div>
+
+        </div>
+
+        <!-- Right: Small Sidepanel (3 Columns) -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <aside class="sticky-top" style="top: 100px; z-index: 1000;">
+
+                <!-- Topic Insights Card -->
+                <div class="card border-0 shadow-none bg-light rounded-lg p-4">
+                    <h6 class="text-uppercase small font-weight-bold text-muted mb-4" style="letter-spacing: 1.5px;">
+                        Topic Insights
+                    </h6>
+
+                    <ul class="list-unstyled mb-0">
+                            <li class="d-flex justify-content-between align-items-center mb-3">
+                                <a href="#" class="text-dark font-weight-500 hover-orange-text" style="text-decoration: none;">
+                                    #Total
+                                </a>
+                                <span class="badge badge-pill px-3"
+                                      style="background-color: #FFF5ED; color: #FF7900; font-size: 0.85rem; border: 1px solid #ffe8d6;">
+                                    @Model.TotalDisplay
+                                </span>
+                            </li>
+                    </ul>
+
+                    <hr class="my-4" style="border-top: 1px solid #e0e0e0;">
+
+                    <a href="/explore" class="btn btn-outline-dark btn-sm btn-block rounded-pill font-weight-bold" style="font-size: 0.8rem;">
+                        Refine Interests
+                    </a>
+                </div>
+
+                <!-- Footer Links (Optional minimalist footer) -->
+                <div class="mt-4 px-2">
+                    <p class="small text-muted mb-0" style="font-size: 0.75rem;">
+                        &copy; 2026 ShareThought. <br>
+                        <a asp-controller="Home" asp-action="ContactUs" asp-area="" class="text-muted mr-2">Contact Us</a>
+                        <a asp-controller="Home" asp-action="TermsAndConditions" class="text-muted">Terms &amp; Conditions</a>
+                        <a asp-controller="Home" asp-action="Privacy" class="text-muted">Privacy</a>
+                    </p>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+

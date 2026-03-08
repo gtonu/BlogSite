@@ -8,15 +8,19 @@ namespace DevSkill.Blog.Infrastructure.Repositories
 {
     public class CategoryRepository : Repository<Category, Guid>, ICategoryRepository
     {
+        private DbContext _dbContext;
+        private DbSet<Category> _dbSet;
         public CategoryRepository(ApplicationDbContext context) 
             : base(context)
         {
+            _dbContext = context;
+            _dbSet = _dbContext.Set<Category>();
         }
-
-        public async Task<(IList<Category>,int total,int totalDisplay)> GetCategoryListAsync(int pageIndex,int pageSize,
-            string? searchText,string? sortOrder)
+        public async Task<(IList<Category>, int, int)> GetCategoryListAsync(int pageIndex, int pageSize,
+            string? searchText, string? sortOrder)
         {
             return await GetDynamicAsync(x => x.CategoryName.Contains(searchText), sortOrder, null, pageIndex, pageSize);
         }
+
     }
 }

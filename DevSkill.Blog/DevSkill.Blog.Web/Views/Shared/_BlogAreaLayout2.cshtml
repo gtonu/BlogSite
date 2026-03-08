@@ -1,0 +1,442 @@
+﻿@inject SignInManager<BlogSiteUser> SignInManager
+@inject UserManager<BlogSiteUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ShareThought - personal blog</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font awesome icons -->
+    <script src="https://kit.fontawesome.com/c2f8684575.js" crossorigin="anonymous"></script>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/BlogSite/BlogArea/css/adminlte.min.css">
+    <!-- toastr -->
+    <link rel="stylesheet" href="~/BlogSite/BlogArea/plugins/toastr/toastr.min.css">
+    @await RenderSectionAsync("Styles",required:false)
+    <link rel="stylesheet" href="~/BlogSite/css/customSyles.css">
+    
+</head>
+@{
+    if(SignInManager.IsSignedIn(User))
+    {
+        <body class="hold-transition sidebar-mini layout-navbar-fixed">
+            <!-- Site wrapper -->
+            <div class="wrapper">
+                <!-- Navbar -->
+                <nav class="main-header navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top shadow-sm px-0">
+                    <div class="container col-lg-10">
+                        <a class="nav-link p-0 mr-3 text-muted" data-widget="pushmenu" href="#" role="button">
+                            <i class="fas fa-bars" style="font-size: 1.1rem;"></i>
+                        </a>
+                        <!-- Left: Branding or Toggle -->
+                        <div class="d-flex align-items-center">
+                            <a class="nav-link px-2 d-md-none" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                            <a href="/" class="navbar-brand font-weight-bold" style="color: #FF7900; letter-spacing: -1px;">
+                                <i class="fa-solid fa-feather-pointed mr-2"></i>ShareThought
+                            </a>
+                        </div>
+
+                        <!-- Center: Navigation Links (Aligned to match card width) -->
+                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                            <ul class="navbar-nav">
+                                @* <li class="nav-item mx-2">
+                            <a class="nav-link text-dark font-weight-600" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-muted" asp-controller="Blog" asp-action="Drafts">Drafts</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-muted" asp-controller="Blog" asp-action="Published">Published</a>
+                        </li> *@
+                                <!-- Add more links here -->
+                            </ul>
+                        </div>
+
+                        <!-- Right: Actions & Profile -->
+                        <div class="navbar-nav ml-auto align-items-center">
+                            <a class="nav-link mr-3 d-none d-sm-block text-muted hover-orange" asp-controller="Blog" asp-action="Create">
+                                <i class="fa-regular fa-pen-to-square mr-1" style="color: #FF7900;"></i> Write
+                            </a>
+
+                            <!-- Profile Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link p-0 d-flex flex-column align-items-center justify-content-center"
+                                   data-toggle="dropdown" href="#" aria-expanded="false" style="min-width: 60px;">
+
+                                    <div class="profile-img-wrapper mb-1">
+                                        <img src="/Profile/user.png"
+                                             class="img-circle border"
+                                             alt="Account"
+                                             data-bs-toggle="tooltip" data-bs-placement="bottom" title="Account"
+                                             style="width: 34px; height: 34px; object-fit: cover; border-color: #eee !important;">
+                                    </div>
+
+                                    <!-- Username Section -->
+                                    <span class="text-dark font-weight-500"
+                                          style="font-size: 0.75rem; line-height: 1; letter-spacing: 0.3px;">
+                                        @User.Identity?.Name
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right border-0 shadow-lg mt-3 rounded-lg">
+
+
+                                    @{
+                                        if (SignInManager.IsSignedIn(User))
+                                        {
+                                            <!-- Dropdown Header: User Info -->
+                                            <div class="px-4 py-3 border-bottom">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="/Profile/user.png" class="img-circle mr-3" alt="User" style="width: 45px; height: 45px;">
+                                                    <div>
+                                                        <span class="d-block font-weight-bold text-dark">@User.Identity?.Name</span>
+                                                        <span class="small text-muted">@User.Identity?.Name?</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Links Section -->
+                                            <div class="py-2">
+                                                
+                                                
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="ContactUs">
+                                                    Help center
+                                                </a>
+                                                <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                                    Privacy policy
+                                                </a>
+                                                <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">
+                                                    Terms &amp; Conditions
+                                                </a>
+                                            </div>
+
+                                            <!-- Logout Section -->
+                                            <div class="bg-light p-3 rounded-bottom">
+                                                <form asp-area="" asp-controller="Account" asp-action="Logout" asp-antiforgery="true"
+                                                      asp-route-returnUrl="@Url.Action("Index","Home",new{area =""})">
+                                                    <button type="submit" class="btn btn-outline-danger btn-block btn-sm rounded-pill">
+                                                        <i class="fa-solid fa-power-off mr-2"></i> Logout (@User.Identity?.Name)
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-light p-3 rounded-bottom">
+                                                <button type="submit" class="btn btn-brand btn-block btn-sm rounded-pill"
+                                                        asp-area="" asp-controller="Account" asp-action="Register">
+                                                    Sign up
+                                                </button>
+                                            </div>
+
+                                            <div class="bg-light p-3 rounded-bottom">
+                                                <button type="submit" class="btn btn-outline-dark btn-block btn-sm rounded-pill"
+                                                        asp-area="" asp-controller="Account" asp-action="Login">
+                                                    Sign in
+                                                </button>
+                                            </div>
+
+                                            <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="ContactUs">
+                                                Help center
+                                            </a>
+                                            <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                                Privacy policy
+                                            </a>
+                                            <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">
+                                                Terms &amp; Conditions
+                                            </a>
+                                        }
+                                    }
+
+                                </div>
+                            </li>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- /.navbar -->
+                <!-- Main Sidebar Container -->
+                <aside class="main-sidebar sidebar-light-white border-right shadow-none">
+                    <!-- Brand Logo: Minimalist and Serif -->
+                    <!-- Sidebar Content -->
+                    <div class="sidebar sticky-top px-3">
+                        <nav class="mt-4">
+                            <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-child-indent" data-widget="treeview" role="menu">
+
+                                <!-- Section Header: Optional but adds structure -->
+                                <li class="nav-header text-uppercase small font-weight-bold text-muted mb-2" style="letter-spacing: 1px;">Menu</li>
+
+                                <li class="nav-item">
+                                    <a asp-area="" asp-controller="Blog" asp-action="Index" asp-route-username="@User.Identity.Name"
+                                       class="nav-link active-orange rounded-pill mb-2">
+                                        <i class="nav-icon fa-solid fa-house-chimney"></i>
+                                        <p class="font-weight-500">Home</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-muted hover-orange-sidebar rounded-pill mb-2"
+                                       asp-area="" asp-controller="Blog" asp-action="Drafts" asp-route-username="@User.Identity.Name">
+                                        <i class="nav-icon fa-solid fa-file-lines"></i>
+                                        <p>Drafts</p>
+                                        <span id="draftSidebar"class="badge badge-warning right rounded-pill" style="background-color: #FFF5ED; color: #FF7900;"></span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-muted hover-orange-sidebar rounded-pill mb-2"
+                                       asp-area="" asp-controller="Blog" asp-action="Published">
+                                        <i class="nav-icon fa-solid fa-circle-check"></i>
+                                        <p>Published</p>
+                                        <span id="publishSidebar" class="badge badge-warning right rounded-pill" style="background-color: #FFF5ED; color: #FF7900;"></span>
+                                    </a>
+                                </li>
+
+
+                                <!-- Footer-style Links inside Sidebar -->
+
+                            </ul>
+                        </nav>
+                    </div>
+                </aside>
+
+
+                <!-- Content Wrapper. Contains page content -->
+                <div class="content-wrapper">
+                    <!-- Content Header (Page header) -->
+                    <!-- Main content -->
+                    <section class="content">
+                        @RenderBody()
+                    </section>
+                    <!-- /.content -->
+                </div>
+                <!-- /.content-wrapper -->
+
+                <footer class="main-footer">
+                    <div class="float-right d-none d-sm-block">
+                        <b>Version</b> 3.2.0
+                    </div>
+                    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+                </footer>
+
+                <!-- Control Sidebar -->
+                <aside class="control-sidebar control-sidebar-light">
+                    <!-- Control sidebar content goes here -->
+                </aside>
+                <!-- /.control-sidebar -->
+            </div>
+            <!-- ./wrapper -->
+            <!-- jQuery -->
+            <script src="~/BlogSite/BlogArea/plugins/jquery/jquery.min.js"></script>
+            <!-- Bootstrap 4 -->
+            <script src="~/BlogSite/BlogArea/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <!-- AdminLTE App -->
+            <script src="~/BlogSite/BlogArea/js/adminlte.min.js"></script>
+            <!-- AdminLTE for demo purposes -->
+            <script src="~/BlogSite/BlogArea/js/demo.js"></script>
+            <!-- toastr -->
+            <script src="~/BlogSite/BlogArea/plugins/toastr/toastr.min.js"></script>
+            <script>
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                  return new bootstrap.Tooltip(tooltipTriggerEl)
+                })
+            </script>
+            @await RenderSectionAsync("Scripts", required: false)
+        </body>
+    }
+    else
+    {
+        <body class="hold-transition layout-top-nav">
+            <!-- Site wrapper -->
+            <div class="wrapper">
+                <!-- Navbar -->
+                <nav class="main-header navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top shadow-sm px-0">
+                    <div class="container col-lg-10">
+                        <a class="nav-link p-0 mr-3 text-muted" data-widget="pushmenu" href="#" role="button">
+                            <i class="fas fa-bars" style="font-size: 1.1rem;"></i>
+                        </a>
+                        <!-- Left: Branding or Toggle -->
+                        <div class="d-flex align-items-center">
+                            <a class="nav-link px-2 d-md-none" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                            <a href="/" class="navbar-brand font-weight-bold" style="color: #FF7900; letter-spacing: -1px;">
+                                <i class="fa-solid fa-feather-pointed mr-2"></i>ShareThought
+                            </a>
+                        </div>
+
+                        <!-- Center: Navigation Links (Aligned to match card width) -->
+                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                            <ul class="navbar-nav">
+                                @* <li class="nav-item mx-2">
+                            <a class="nav-link text-dark font-weight-600" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-muted" asp-controller="Blog" asp-action="Drafts">Drafts</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-muted" asp-controller="Blog" asp-action="Published">Published</a>
+                        </li> *@
+                                <!-- Add more links here -->
+                            </ul>
+                        </div>
+
+                        <!-- Right: Actions & Profile -->
+                        <div class="navbar-nav ml-auto align-items-center">
+                            <a class="nav-link mr-3 d-none d-sm-block text-muted hover-orange" asp-controller="Blog" asp-action="Create">
+                                <i class="fa-regular fa-pen-to-square mr-1" style="color: #FF7900;"></i> Write
+                            </a>
+
+                            <!-- Profile Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link p-0 d-flex flex-column align-items-center justify-content-center"
+                                   data-toggle="dropdown" href="#" aria-expanded="false" style="min-width: 60px;">
+
+                                    <div class="profile-img-wrapper mb-1">
+                                        <img src="/Profile/user.png"
+                                             class="img-circle border"
+                                             alt="Account"
+                                             data-bs-toggle="tooltip" data-bs-placement="bottom" title="Account"
+                                             style="width: 34px; height: 34px; object-fit: cover; border-color: #eee !important;">
+                                    </div>
+
+                                    <!-- Username Section -->
+                                    <span class="text-dark font-weight-500"
+                                          style="font-size: 0.75rem; line-height: 1; letter-spacing: 0.3px;">
+                                        @User.Identity?.Name
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right border-0 shadow-lg mt-3 rounded-lg">
+
+
+                                    @{
+                                        if (SignInManager.IsSignedIn(User))
+                                        {
+                                            <!-- Dropdown Header: User Info -->
+                                            <div class="px-4 py-3 border-bottom">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="/Profile/user.png" class="img-circle mr-3" alt="User" style="width: 45px; height: 45px;">
+                                                    <div>
+                                                        <span class="d-block font-weight-bold text-dark">@User.Identity?.Name</span>
+                                                        <span class="small text-muted">@User.Identity?.Name?</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Links Section -->
+                                            <div class="py-2">
+                                                
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="ContactUs">
+                                                    Help center
+                                                </a>
+                                                <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                                    Privacy policy
+                                                </a>
+                                                <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">
+                                                    Terms &amp; Conditions
+                                                </a>
+                                            </div>
+
+                                            <!-- Logout Section -->
+                                            <div class="bg-light p-3 rounded-bottom">
+                                                <form asp-area="" asp-controller="Account" asp-action="Logout" asp-antiforgery="true"
+                                                      asp-route-returnUrl="@Url.Action("Index","Home",new{area =""})">
+                                                    <button type="submit" class="btn btn-outline-danger btn-block btn-sm rounded-pill">
+                                                        <i class="fa-solid fa-power-off mr-2"></i> Logout (@User.Identity?.Name)
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-light p-3 rounded-bottom">
+                                                <button type="submit" class="btn btn-brand btn-block btn-sm rounded-pill"
+                                                        asp-area="" asp-controller="Account" asp-action="Register">
+                                                    Sign up
+                                                </button>
+                                            </div>
+
+                                            <div class="bg-light p-3 rounded-bottom">
+                                                <button type="submit" class="btn btn-outline-dark btn-block btn-sm rounded-pill"
+                                                        asp-area="" asp-controller="Account" asp-action="Login">
+                                                    Sign in
+                                                </button>
+                                            </div>
+
+                                            <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="ContactUs">
+                                                Help center
+                                            </a>
+                                            <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                                Privacy policy
+                                            </a>
+                                            <a class="dropdown-item py-2 px-4 text-muted hover-orange" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">
+                                                Terms &amp; Conditions
+                                            </a>
+                                        }
+                                    }
+
+                                </div>
+                            </li>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- /.navbar -->
+                <!-- Main Sidebar Container -->
+
+                <!-- Content Wrapper. Contains page content -->
+                <div class="content-wrapper bg-white">
+                    <!-- Main content -->
+                    <section class="content pt-5 pb-5">
+                        <div class="container">
+                                    @RenderBody()
+
+                        </div>
+                    </section>
+                </div>
+
+
+                <footer class="main-footer">
+                    <div class="float-right d-none d-sm-block">
+                        <b>Version</b> 3.2.0
+                    </div>
+                    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+                </footer>
+
+                <!-- Control Sidebar -->
+                <aside class="control-sidebar control-sidebar-light">
+                    <!-- Control sidebar content goes here -->
+                </aside>
+                <!-- /.control-sidebar -->
+            </div>
+            <!-- ./wrapper -->
+            <!-- jQuery -->
+            <script src="~/BlogSite/BlogArea/plugins/jquery/jquery.min.js"></script>
+            <!-- Bootstrap 4 -->
+            <script src="~/BlogSite/BlogArea/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <!-- AdminLTE App -->
+            <script src="~/BlogSite/BlogArea/js/adminlte.min.js"></script>
+            <!-- AdminLTE for demo purposes -->
+            <script src="~/BlogSite/BlogArea/js/demo.js"></script>
+            <!-- toastr -->
+            <script src="~/BlogSite/BlogArea/plugins/toastr/toastr.min.js"></script>
+            <script>
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                  return new bootstrap.Tooltip(tooltipTriggerEl)
+                })
+            </script>
+            @await RenderSectionAsync("Scripts", required: false)
+        </body>
+    }
+}
+
+</html>

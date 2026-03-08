@@ -111,6 +111,47 @@
     animation: pulse 0.1s ease-in-out; /* Use the 'pulse' keyframe name from Animate.css */
 }
 
+.editor-height{
+    min-height: 500px;
+}
+
+
+.card-header.bg-primary {
+    border-bottom: none;
+    border-radius: 0.5rem 0.5rem 0 0; /* Match Sneat card radius */
+}
+
+/* 2. Professional Pagination */
+.dataTables_paginate .paginate_button {
+    border: none !important;
+    background: transparent !important;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: #696cff !important; /* Sneat Primary Color */
+    color: white !important;
+    border-radius: 0.375rem;
+}
+
+/* 3. Table Header Styling */
+#categories thead th {
+    background-color: #f5f5f9;
+    border-bottom: 1px solid #d9dee3;
+}
+
+/* 4. Action Button Hover Effect */
+.btn-icon:hover {
+    background-color: rgba(105, 108, 255, 0.1);
+    border-radius: 50%;
+}
+
+/* 5. Pagination and Search Alignment */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 1rem;
+}
+
+
 
 
 

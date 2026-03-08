@@ -1,0 +1,381 @@
+﻿@model ReadBlogPostModel
+@inject SignInManager<BlogSiteUser> SignInManager
+@inject UserManager<BlogSiteUser> UserManager
+@{
+    ViewData["Title"] = "Read";
+    Layout = "_BlogAreaLayout2";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 1. EMPTY SPACE (Left) - Adjust offset to keep content professional -->
+        <div class="col-lg-1 d-none d-lg-block"></div>
+        <div class="col-12 col-md-10 col-lg-8 pt-5 pb-5">
+            <article class="single-post">
+                <header class="post-header mb-5 text-center">
+                    <div class="meta-cat mb-4">
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <span class="badge badge-pill px-3 py-2 mx-1 shadow-sm"
+                                  style="background-color: #FFF5ED; font-weight: 500; border: 1px solid #ffe8d6;">
+                                <i class="fa-solid fa-tag fa-xs"></i>@tag
+                            </span>
+                        }
+                    </div>
+
+                    <!-- Title: Using Playfair Display to match Sidebar/Logo -->
+                    <h1 class="mb-4" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 800; line-height: 1.2; color: #292929; letter-spacing: -1px;">
+                        @Model.Title
+                    </h1>
+
+                    <div class="post-meta mb-5 d-flex align-items-center justify-content-center">
+                        <img src="/Profile/user.png" class="rounded-circle mr-2" style="width: 30px; height: 30px; border: 1px solid #FF7900;">
+                        <span class="text-dark font-weight-600 mr-3">@User.Identity.Name</span>
+                        <span class="text-muted small border-left pl-3">@Model.PublishedAt.ToString("MMM dd, yyyy")</span>
+                    </div>
+
+                    <div class="post-featured-image mb-5">
+                        <img src="/thumbnails/@(Model?.ThumbnailName ?? "ShareThought.jpg")"
+                             class="img-fluid rounded shadow-sm"
+                             alt="Featured Image"
+                             style="width: 100%; height: auto; max-height: 350px; object-fit: cover;">
+                    </div>
+                </header>
+
+                <!-- Post Body: Clean Typography -->
+                <div class="post-body" style="font-family: 'Inter', system-ui, -apple-system, sans-serif; font-size: 1.25rem; line-height: 1.9; color: #292929;">
+                    <div class="entry-content mb-5">
+                        @Html.Raw(Model.Body)
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="post-tags py-4 text-center">
+                        @foreach (var category in Model.Categories)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-light rounded-pill m-1 px-3"
+                               style="color: #666; border-color: #eee; background: #fafafa;">#@category</a>
+                        }
+                    </div>
+
+                    <!-- Interactions Bar -->
+                    <div class="tags-share-box d-flex align-items-center justify-content-between border-top border-bottom py-3 mt-4">
+                        <a href="#comments" class="post-comment-btn text-dark font-weight-500" style="text-decoration: none;">
+                            <span class="single-comment-o">
+                                <i class="fa-regular fa-comment-dots mr-2" style="color: #FF7900;"></i>
+                                @Model.Comments.Count Responses
+                            </span>
+                        </a>
+
+                    </div>
+                </div>
+            </article>
+
+            <section class="comment-area mt-5" id="comments">
+                <h3 class="mb-5 font-weight-bold" style="font-family: 'Playfair Display', serif;">Responses</h3>
+
+                @if (Model.Comments.Count > 0)
+                {
+                    foreach (var comment in Model.Comments)
+                    {
+                        <div class="media mb-4 p-4 bg-white rounded shadow-none border-bottom">
+                            <img src="/Profile/user.png" class="mr-3 rounded-circle border" alt="User" style="width: 45px; height: 45px;">
+                            <div class="media-body">
+                                <div class="d-flex justify-content-between align-items-baseline mb-2">
+                                    <h6 class="mt-0 mb-0 font-weight-bold text-dark">@comment.Name</h6>
+                                </div>
+                                <p class="text-secondary mb-2" style="font-size: 1.05rem;">@comment.Body</p>
+
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-link text-primary p-0 font-weight-bold reply-comment-btn"
+                                       data-id="@comment.Id" style="color: #FF7900 !important;">
+                                        Reply
+                                    </a>
+                                }
+
+                                @foreach (var reply in comment.Replies)
+                                {
+                                    <div class="media mt-4 p-3 rounded" style="background-color: #FFF5ED; border-left: 3px solid #FF7900;">
+                                        <img src="/Profile/user.png" class="mr-3 rounded-circle" alt="User" style="width: 35px; height: 35px;">
+                                        <div class="media-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <h6 class="mt-0 mb-0 font-weight-bold small">
+                                                    @User.Identity.Name
+                                                    <span class="badge badge-pill ml-2" style="background: #FF7900; color: #fff; font-size: 10px;">Author</span>
+                                                </h6>
+                                            </div>
+                                            <p class="small text-dark mb-0">@reply.Body</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+
+                <form class="comment-form mb-5 gray-bg p-5 collapse" id="comment-form" asp-antiforgery="true">
+                    <h3 class="mb-4 text-center">Leave a response</h3>
+                    <input type="hidden" id="postId" value="@Model.Id">
+                    <input type="hidden" name="PostId" id="PostId-comment">
+                    <input type="hidden" name="ParentCommentId" id="ParentCommentId">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <textarea class="form-control mb-3" name="Body" id="Body" cols="30" rows="5"
+                                      placeholder="Comment"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="Name" id="Name" placeholder="Name:">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="Email" id="Email" placeholder="Email:">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-brand rounded-pill" type="submit" name="submit-comment" id="submit-comment">
+                            <i class="fa-solid fa-paper-plane" style="color: #22281f;"></i>
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <div class="col-lg-3 col-md-3 d-none d-md-block">
+            <aside class="sticky-top" style="top: 100px; z-index: 1000;">
+                <div class="p-4 bg-white rounded-lg border shadow-sm" style="border-color: #f0f0f0 !important;">
+
+                    <h6 class="text-uppercase small font-weight-bold text-muted mb-4" style="letter-spacing: 1px;">Post Tools</h6>
+
+                    <!-- Interaction Links -->
+                    <ul class="list-unstyled mb-0">
+                        <!-- Categories Section -->
+                        <li class="mb-3">
+                            <a href="#collapse-categories" class="text-dark d-flex align-items-center justify-content-between hover-orange-text"
+                               data-toggle="collapse" role="button" aria-expanded="false" style="text-decoration: none;">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-layer-group mr-3" style="color: #FF7900; width: 20px;"></i>
+                                    <span>Categories</span>
+                                </div>
+                                <span class="badge badge-pill font-weight-normal px-2"
+                                      style="background-color: #FFF5ED; color: #FF7900; font-size: 0.75rem; border: 1px solid #ffe8d6;">
+                                    @Model.Categories.Count
+                                </span>
+                            </a>
+                            <!-- Categories Content -->
+                            <div class="collapse mt-2 px-2" id="collapse-categories">
+                                <div class="d-flex flex-wrap pt-2">
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <a href="#" class="btn btn-sm btn-outline-light rounded-pill m-1 px-3"
+                                           style="color: #666; border-color: #eee; background: #fafafa;">#@category</a>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Tags Section -->
+                        <li class="mb-3">
+                            <a href="#collapse-tags" class="text-dark d-flex align-items-center justify-content-between hover-orange-text"
+                               data-toggle="collapse" role="button" aria-expanded="false" style="text-decoration: none;">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-tags mr-3" style="color: #FF7900; width: 20px;"></i>
+                                    <span>Tags</span>
+                                </div>
+                                <span class="badge badge-pill font-weight-normal px-2"
+                                      style="background-color: #FFF5ED; color: #FF7900; font-size: 0.75rem; border: 1px solid #ffe8d6;">
+                                    @Model.Tags.Count
+                                </span>
+                            </a>
+                            <!-- Tags Content -->
+                            <div class="collapse mt-2 px-2" id="collapse-tags">
+                                <div class="d-flex flex-wrap pt-2">
+                                    @foreach (var tag in Model.Tags)
+                                    {
+                                        <span class="badge badge-pill px-3 py-2 mx-1 shadow-sm"
+                                              style="background-color: #FFF5ED; font-weight: 500; border: 1px solid #ffe8d6;">
+                                            <i class="fa-solid fa-tag fa-xs"></i>@tag
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="mb-3">
+                            <a href="javascript:void(0)" class="text-dark d-flex align-items-center hover-orange-text copy-link-button" data-id="@Model.AbsoluteUrl" style="text-decoration: none;">
+                                <i class="fa-solid fa-link mr-3" style="color: #FF7900; width: 20px;"></i>
+                                Copy Link
+                            </a>
+                        </li>
+
+                        <!-- Report Section -->
+                        <li>
+                            <a href="#collapse-reportForm" class="text-dark d-flex align-items-center hover-orange-text"
+                               data-toggle="collapse" role="button" aria-expanded="false" style="text-decoration: none;">
+                                <i class="fa-solid fa-circle-exclamation mr-3" style="color: #FF7900; width: 20px;"></i> Report Post
+                            </a>
+
+                            <div class="collapse mt-3" id="collapse-reportForm">
+                                <form id="reportForm" asp-antiforgery="true">
+                                    <div class="p-3 bg-light rounded-lg border">
+                                        <textarea class="form-control form-control-sm mb-2 border-0" id="report-area" name="Report"
+                                                  rows="3" placeholder="Describe the issue..."
+                                                  style="font-size: 0.85rem; resize: none; background: transparent; box-shadow: none;"></textarea>
+                                        <button type="submit" class="btn btn-brand btn-sm btn-block rounded-pill" id="submit-report-btn"
+                                                style="background-color: #FF7900; color: white; border: none; font-size: 0.8rem; font-weight: 600;">
+                                            Submit Report
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+
+
+                </div>
+            </aside>
+        </div>
+        <!-- 4. EMPTY SPACE (Right) -->
+        <div class="col-lg-1 d-none d-lg-block"></div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(function(){
+
+            let form = $('#comment-form');
+            let parentCommentId = $('#ParentCommentId');
+            let offset = 100;
+
+            form.on('shown.bs.collapse', function () {
+
+
+                    $('html, body').animate({
+                        // Use the form's ID directly since 'this.hash' is likely empty
+                        scrollTop: form.offset().top - offset
+                    }, 500, 'swing');
+
+                // Unbind the event so it doesn't trigger every time the form opens
+                    // form.off('shown.bs.collapse');
+            });
+
+            $(document).on('click','.post-comment-btn',function(e){
+                e.preventDefault();
+
+                parentCommentId.val('');
+                if(form.hasClass('show'))
+                {
+                    form.trigger('shown.bs.collapse');
+                }
+                else
+                {
+                    form.collapse('show');
+                }
+            });
+
+            $(document).on('click','.reply-comment-btn',function(e){
+                e.preventDefault();
+
+                let commentId = $(this).data('id');
+                parentCommentId.val(commentId);
+
+                $(this).closest('.media-body').append(form);
+                if(form.hasClass('show'))
+                {
+                    form.trigger('shown.bs.collapse');
+                }
+                else
+                {
+                    form.collapse('show');
+                }
+
+            });
+
+            let postId = $('#postId').val();
+            let commentPostId = $('#PostId-comment').val(postId);
+            let commentBody = $('#Body').val();
+            let name = $('#Name').val();
+            let email = $('#Email').val();
+
+            $('#submit-comment').on('click',function(e){
+                e.preventDefault();
+
+                let form = $('#comment-form');
+                $.ajax({
+                    url:'/blog/comment',
+                    type:'POST',
+                    data:form.serialize(),
+                    success:function(response){
+                        if(response.success === true)
+                            {
+                                window.location.href = response.redirectUrl;
+                            }
+                    }
+                });
+           });
+
+            $(document).on('click', '.copy-link-button', function (e) {
+                e.preventDefault();
+
+                var btn = $(this);
+                var url = btn.data('id');
+
+                navigator.clipboard.writeText(url).then(function () {
+
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true,
+                        "positionClass": "toast-top-right", // Adjust as needed
+                        "timeOut": "3000",
+                    };
+
+                    toastr.success('Link copied to clipboard!', 'Success');
+
+                }).catch(function (err) {
+                    toastr.error('Failed to copy the link.', 'Error');
+                });
+             });
+
+            let reportData = $('#report-area').val();
+            $('#submit-report-btn').on('click',function(e){
+                e.preventDefault();
+
+                let form = $('#reportForm').serializeArray();
+                form.push({
+                    name:"PostId",
+                    value:postId
+                });
+                $.ajax({
+                    url:'/blog/report',
+                    type:'POST',
+                    data:$.param(form),
+                    success:function(response){
+                        if(response.success)
+                        {
+                            $('#collapse-reportForm').collapse('hide');
+                            $('#report-area').val('');
+
+                            toastr.options = {
+                                "closeButton": true,
+                                "progressBar": true,
+                                "positionClass": "toast-top-right", // Adjust as needed
+                                "timeOut": "3000",
+                            };
+
+                            toastr.info('We have received your report', 'info');
+                        }
+                    }
+                });
+
+            })
+
+        });
+    </script>
+}
+
+

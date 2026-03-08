@@ -1,0 +1,178 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css" />
+}
+
+
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb breadcrumb-style1">
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="TermsAndConditions" asp-action="Index">Terms & Conditions</a>
+            </li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+    </nav>
+    <!-- Header Action Bar -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">
+            <span class="text-muted fw-light">Terms &amp; Conditions</span>
+        </h4>
+        <button class="btn rounded-pill btn-outline-secondary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseExample"
+                aria-expanded="false"
+                aria-controls="collapseExample">
+            <i class="bx bx-filter-alt me-1"></i> Filter
+        </button>
+    </div>
+    <!-- /buttons section -->
+    <!-- Collapsed content block for advanced search form -->
+
+    <!-- /Collapsed content -->
+    <!-- Modal -->
+    <partial name="_DeleteModalPartial" />
+    <!-- /Modal -->
+    <!-- begin::Datatable section -->
+    <!-- Main Content Card -->
+    <div class="card shadow-sm border-0">
+        <!-- Professional Eye-catchy Header -->
+        <div class="card-header d-flex justify-content-between align-items-center bg-primary py-3">
+            <h5 class="card-title mb-0 text-white">
+                <i class="bx bx-shield-quarter me-2"></i> Compliance Documents
+            </h5>
+            <span class="badge bg-white text-primary rounded-pill">Official Registry</span>
+        </div>
+
+        <div class="card-body p-0">
+            <!-- Keep your form for logical consistency -->
+            <form asp-antiforgery="true" asp-area="Admin" asp-controller="Blog" asp-action="Create" enctype="multipart/form-data">
+                <div class="table-responsive text-nowrap">
+                    <table id="termsAndConditions" class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">Version</th>
+                                <th class="py-3 text-uppercase fw-bold small text-muted">Content Preview</th>
+                                <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            <!-- DataTables Populated Here -->
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">Version</th>
+                                <th class="py-3 text-uppercase fw-bold small text-muted">Content Preview</th>
+                                <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 150px;">Actions</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <!-- Bottom Accent -->
+        <div class="card-footer border-top-0 py-2 bg-light opacity-50"></div>
+    </div>
+    <!-- end::Datatable section -->
+</div>
+
+<!-- / Content -->
+@* @section Scripts
+{
+    <script>
+        $('#basicModal').on('show.bs.modal',function(){
+            $('#modalBody').load('/Admin/blog/create');
+        });
+    </script>
+} *@
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+    <script>
+        $(function()
+        {
+            $("#termsAndConditions").DataTable({
+                processing:true,
+                serverSide:true,
+                responsive:true,
+                lengthChange:true,
+                autoWidth:false,
+                searching:false,
+                ajax:{
+                    url:"/Admin/TermsAndConditions/GetTermsAndConditionsList",
+                    type:"POST",
+                    contentType:"application/json",
+                    dataType:"json",
+                    data:function(d){
+                        d.SearchItem = {
+
+                        };
+                        return JSON.stringify(d);
+                    },
+                },
+                columnDefs:[
+                    {
+                        orderable: false,
+                        targets:1,
+                        render:function(data,type,row){
+                            if(data.length > 150){
+                                return data.substring(0,150) + "........";
+                            }
+                            else{
+                                return data;
+                            }
+                        }
+                    },
+                    {
+                        orderable: false,
+                        targets: 2,
+                        render: function(data, type, row){
+                            return `<button type="submit" class="btn rounded-pill btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" onclick="window.location.href='/admin/product/edit/${data}'" value='${data}'>
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button type="submit" class="btn rounded-pill btn-danger btn-sm show-bs-modal" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" data-id='${data}' value='${data}'>
+                                        <i class="fa fa-trash"></i>
+                                    </button>`;
+                        }
+                    }
+                ]
+            });
+
+            $("#termsAndConditions").on("click",".show-bs-modal",function(){
+                let id = $(this).data("id");
+                let deleteModal = $("#deleteModal");
+                deleteModal.find('.modal-body p').text(`Do you really want to delete this version?`);
+                $("#delete-id").val(id);
+                $("#delete-form").attr("action","/admin/user/delete");
+                deleteModal.modal('show');
+            });
+
+            $("#delete-button").click(function()
+            {
+                $("#delete-form").submit();
+            });
+
+        });
+    </script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+}
+
+
+

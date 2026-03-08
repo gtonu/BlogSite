@@ -1,0 +1,508 @@
+﻿/* Custom Burnt-Orange Button */
+.btn-brand {
+    background-color: #FF7900 !important;
+    border-color: #FF7900 !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-brand:hover {
+    background-color: #FF7900 !important; /* Slightly darker shade for hover */
+    border-color: #FF7900 !important;
+    transform: translateY(-2px); /* Subtle lift effect */
+    box-shadow: 0 4px 15px rgba(226, 114, 91, 0.4);
+}
+
+.btn-brand:active {
+    transform: translateY(0);
+}
+
+.btn-brand.rounded-pill {
+    border-radius: 50rem !important;
+}
+
+.custom-input {
+    background-color: #f8f9fa !important; /* Soothing light-grey background */
+    border: 1.5px rgba(226, 114, 91, 0.6) !important; /* Your signature orange border */
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+/* Ensure the border stays orange and doesn't turn blue on focus */
+.custom-input:focus {
+    background-color: #ffffff !important; /* Brighten slightly when typing */
+    border-color: #E2725B !important; 
+    box-shadow: 0 0 0 0.2rem rgba(226, 114, 91, 0.25) !important; /* Subtle orange glow */
+    outline: none;
+}
+
+/* Targets the typing area (WYSIWYG and Markdown) */
+.toastui-editor-contents,
+.toastui-editor-runtime-content {
+    font-size: 18px !important; /* Change to your preferred size */
+    line-height: 1.6;
+}
+
+/* Targets the placeholder text specifically */
+.toastui-editor-contents::before {
+    font-size: 18px !important;
+}
+
+/* Reverses the layout so the toolbar moves to the bottom */
+#editor .toastui-editor-defaultUI {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+}
+
+/* Optional: Removes the top border from the toolbar and adds one to the bottom of the editor */
+#editor .toastui-editor-toolbar {
+    border-top: 1px solid #dadde1 !important;
+    border-bottom: none !important;
+}
+
+/* Adjusts the editor area border to meet the toolbar at the bottom */
+#editor .toastui-editor-main {
+    border-bottom: 1px solid #dadde1 !important;
+}
+
+.btn-custom-padding {
+    padding-top: .15rem !important;
+    padding-bottom: .15rem !important;
+    font-size: .70rem !important;
+}
+
+
+/* Minimalist Navbar Styling */
+.main-header {
+    background-color: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px); /* Modern frosted glass effect */
+}
+
+    /* Ensure the toggle and brand share the exact same height as the navbar */
+.main-header .nav-link[data-widget="pushmenu"] {
+    display: flex;
+    align-items: center;
+    height: 57px; /* Matches AdminLTE standard navbar height */
+    color: #4A4A4A !important;
+    transition: color 0.3s;
+}
+
+.main-header .nav-link[data-widget="pushmenu"]:hover {
+    color: #FF7900 !important; /* Elegant orange hover */
+}
+
+/* Ensure the navbar brand is also vertically centered */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    height: 57px;
+}
+
+
+/* Nav Link Hover Effects */
+.navbar-nav .nav-link {
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.hover-orange:hover {
+    color: #FF7900 !important;
+    background-color: #FFF5ED !important; /* Low tone orange background */
+}
+
+/* Profile Image Border Effect */
+.profile-img-wrapper {
+    border: 2px solid transparent;
+    padding: 2px;
+    border-radius: 50%;
+    transition: border-color 0.3s ease;
+}
+
+.profile-img-wrapper:hover {
+    border-color: #FF7900;
+}
+
+/* Dropdown Customization */
+.dropdown-menu-lg {
+    min-width: 260px;
+}
+
+.dropdown-item {
+    transition: all 0.2s ease;
+}
+
+/* Matching the 10-column width exactly */
+@media (min-width: 992px) {
+    .container.col-lg-10 {
+        max-width: 83.333333%; /* Same as col-lg-10 */
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Sidebar Background and Border */
+.main-sidebar {
+    background-color: #ffffff !important;
+}
+
+/* Custom Active State: Bold but soft */
+.nav-pills .nav-link.active-orange {
+    background-color: #FFF5ED !important; /* Low tone orange background */
+    color: #FF7900 !important;
+    font-weight: 600;
+}
+
+.nav-pills .nav-link.active-orange i {
+     color: #FF7900 !important;
+}
+
+/* Hover State */
+.hover-orange-sidebar:hover {
+    background-color: #fafafa !important;
+    color: #FF7900 !important;
+}
+
+/* Remove default AdminLTE blue accents */
+.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+    background-color: #FFF5ED !important;
+    color: #FF7900 !important;
+    box-shadow: none;
+}
+
+/* Sidebar Icon Styling */
+.nav-sidebar .nav-icon {
+    font-size: 0.9rem;
+    margin-right: 12px;
+    width: 25px;
+    text-align: center;
+}
+
+/* Brand Link adjustments */
+.brand-link {
+    transition: opacity 0.3s;
+}
+
+.brand-link:hover {
+    opacity: 0.8;
+}
+
+/* Card Hover Effect */
+.post-title-hover {
+    transition: color 0.2s ease-in-out;
+}
+
+.post-title-hover:hover {
+    color: #FF7900 !important; /* Elegant orange on hover */
+}
+
+/* Adjusting the card for a flatter, Medium-style look */
+.card.border-bottom {
+    border-bottom: 1px solid #f0f0f0 !important;
+    padding-bottom: 2rem;
+}
+
+/* Dropdown styling to match the new Navbar */
+.dropdown-menu {
+    font-size: 0.9rem;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+from {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+}
+
+/* Typography adjustment for the count badge */
+.badge-pill {
+    padding: 0.4em 0.8em;
+    letter-spacing: 0.5px;
+}
+
+#post-title:focus, #editor:focus {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+#share-button1:hover {
+    background-color: #e66d00 !important; /* Slightly darker orange */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 121, 0, 0.2) !important;
+}
+
+/* Premium Hover States */
+.single-comment-o:hover {
+    color: #FF7900;
+    transition: 0.3s;
+}
+
+.post-body p {
+    margin-bottom: 1.5rem;
+}
+
+.single-like-button:hover i {
+    font-weight: 900;
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+/* Focus effects for a premium feel */
+.comment-form .form-control:focus {
+    background-color: #fff !important;
+    border: 1px solid #FF7900 !important;
+    box-shadow: 0 4px 12px rgba(255, 121, 0, 0.05) !important;
+}
+
+#submit-comment:hover {
+    background-color: #e66d00 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 121, 0, 0.2) !important;
+}
+
+/* Sidebar Link Hover Effect */
+.hover-orange-text {
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.hover-orange-text:hover {
+    color: #FF7900 !important;
+    transform: translateX(5px);
+}
+
+/* Ensure report form inputs look professional */
+#reportForm textarea:focus {
+    box-shadow: none !important;
+    background-color: #fff !important;
+    border: 1px solid #FF7900 !important;
+}
+
+/* Topic Link Pill Styling */
+.topic-link {
+    background-color: #fcfcfc !important;
+    border: 1px solid #f0f0f0 !important;
+    color: #4a4a4a !important;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.topic-link:hover {
+    background-color: #FFF5ED !important; /* Your low-tone orange background */
+    border-color: #FF7900 !important;
+    color: #FF7900 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 121, 0, 0.15) !important;
+}
+
+/* Secondary List Hover */
+.hover-orange:hover {
+    color: #FF7900 !important;
+    text-decoration: underline !important;
+}
+
+/* Content Wrapper adjustment to match the clean white look */
+.content-wrapper {
+    background-color: #ffffff !important;
+}
+
+/* Container for the search */
+.search-container {
+    background-color: #f8f9fa; /* Very light gray */
+    border-radius: 50px;
+    padding: 2px 10px;
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+}
+
+    /* Hover and Focus States */
+.search-container:hover, .search-container:focus-within {
+    background-color: #fff;
+    border-color: #FF7900 !important; /* Your brand orange */
+    box-shadow: 0 2px 8px rgba(255, 121, 0, 0.1) !important;
+}
+
+/* Input reset */
+.nav-search-input:focus {
+    box-shadow: none !important;
+    outline: none !important;
+    width: 240px !important; /* Expands slightly when typing */
+}
+
+/* Icon color change on container focus */
+.search-container:focus-within i {
+    color: #FF7900 !important;
+}
+
+.tooltip {
+    z-index: 1060 !important; /* Ensure it appears above the dropdown menu */
+}
+
+
+/* Fixed Sidebar width for layout-top-nav compatibility */
+.main-sidebar {
+    width: 250px;
+}
+
+/* Handle the 'collapsed' state for AdminLTE's pushmenu */
+.sidebar-collapse .main-sidebar {
+    margin-left: -250px !important;
+}
+
+/* Active Orange State: Refined Low-Tone */
+.nav-pills .nav-link.active-orange {
+    background-color: #FFF5ED !important;
+    color: #FF7900 !important;
+    border: 1px solid #ffe8d6;
+}
+
+.nav-pills .nav-link.active-orange i {
+    color: #FF7900 !important;
+}
+
+/* Hover Effect */
+.hover-orange-sidebar:hover {
+    background-color: #fafafa !important;
+    color: #FF7900 !important;
+}
+
+/* Ensure sidebar items don't have blue outlines on click */
+.nav-sidebar .nav-link:focus {
+    background-color: transparent;
+}
+
+/* Hide horizontal scrollbar if any */
+.sidebar {
+    overflow-x: hidden;
+}
+
+/* Premium Hover Interactions */
+.blog-hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255, 121, 0, 0.1) !important;
+    background-color: #ffffff !important;
+    border-color: #ffe8d6 !important;
+}
+
+.visit-blog-btn:hover {
+    background-color: #e66d00 !important;
+    transform: scale(1.02);
+}
+
+/* Standardize card height for visual alignment */
+.blog-hover-card {
+    min-height: 320px;
+}
+
+/* Premium Interaction for Explore Page Search */
+.explore-search-wrapper {
+    background-color: #fcfcfc !important;
+}
+
+.explore-search-wrapper:focus-within {
+    background-color: #fff !important;
+    border-color: #FF7900 !important; /* ShareThought Brand Orange */
+    box-shadow: 0 10px 30px rgba(255, 121, 0, 0.08) !important;
+    transform: translateY(-2px);
+}
+
+.explore-search-wrapper:focus-within i {
+    color: #FF7900 !important;
+}
+
+    /* Standardizes the input placeholder color */
+.explore-search-wrapper input::placeholder {
+    color: #adb5bd;
+    font-weight: 400;
+}
+
+/* Updated Hover State for 2026 UX */
+.blog-hover-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08) !important;
+    border-color: #212529 !important; /* Subtle black border on hover */
+}
+
+.visit-blog-btn:hover {
+    background-color: #000000 !important; /* Pure black on hover */
+    transform: scale(1.05);
+    color: #fff;
+}
+
+/* Standardized Card Height */
+.blog-hover-card {
+    min-height: 300px;
+}
+
+/* Professional Typography Tweaks */
+.terms-body p {
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+    color: #333;
+}
+
+.terms-body li {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+/* Smooth Scroll to Anchor Links */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Aesthetic Refinements */
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important;
+}
+
+.btn-brand {
+    background-color: #FF7900;
+    color: white;
+}
+
+.btn-brand:hover {
+    background-color: #e66d00;
+    color: white;
+}
+
+.transition {
+    transition: all 0.3s ease;
+}
+
+/* Sleek Overrides for Sneat Theme */
+.bg-lighter {
+    background-color: #f5f5f9;
+}
+
+.border-start.border-3 {
+    border-left-width: 3px !important;
+}
+
+/* Typography touch-ups */
+h2, h5, h6 {
+    letter-spacing: -0.5px;
+}
+
+.breadcrumb-style1 .breadcrumb-item a {
+    color: #a1acb8;
+}
+
+
+
+
+

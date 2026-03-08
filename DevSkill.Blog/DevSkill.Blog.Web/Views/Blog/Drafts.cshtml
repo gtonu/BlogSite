@@ -1,0 +1,119 @@
+﻿@model GetDraftsModel
+@{
+    ViewData["Title"] = "Drafts";
+    Layout = "_BlogAreaLayout2";
+}
+<div class="row justify-content-center mb-4 pt-3">
+    <div class="col-lg-10 col-md-10 col-sm-12">
+        <div class="d-flex align-items-baseline border-bottom pb-2">
+            <h4 class="font-weight-bold mr-2 text-dark" style="letter-spacing: -0.5px;">Drafts</h4>
+            <span class="badge badge-pill font-weight-normal" style="background-color: #FFF5ED; color: #FF7900; font-size: 0.9rem;">
+                @((Model.Drafts?.Count) ?? 0)
+            </span>
+        </div>
+    </div>
+</div>
+<partial name="_DeleteModalPartial"/>
+@{
+	if ((Model.Drafts?.Count ?? 0) == 0)
+	{
+
+	}
+	else
+	{
+		foreach(var draft in Model.Drafts)
+		{
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-10 col-sm-12">
+                    <!-- Card: Added position-relative to anchor the dropdown -->
+                    <div class="card border-0 border-bottom mb-5 bg-transparent shadow-none w-100 position-relative" style="transition: opacity 0.3s ease;">
+
+                        <!-- Dropdown: Positioned at top-right of the CONTENT area (col-9), not the image -->
+                        <div class="dropdown dropleft position-absolute" style="top: 0; right: 25%; z-index: 10;">
+                            <button class="btn btn-link text-muted p-0" type="button" id="cardMenu-@draft.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-decoration: none;">
+                                <i class="fas fa-ellipsis-h" style="font-size: 1.1rem;"></i>
+                            </button>
+                            <!-- .dropdown-menu-right aligns the right edge of the menu with the trigger -->
+                            <div class="dropdown-menu dropdown-menu-right border-0 shadow-lg rounded-lg mt-2" aria-labelledby="cardMenu-@draft.Id">
+                                <a class="dropdown-item py-2 copy-link-button" href="#" data-id="@draft.Id"><i class="far fa-copy mr-2"></i> Copy link</a>
+                                <a class="dropdown-item py-2 edit-post-btn" asp-controller="Blog" asp-action="Edit" asp-route-username="@User.Identity.Name" 
+                                 asp-route-id="@draft.Id" data-id="@draft.Id"><i class="far fa-edit mr-2"></i> Edit</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item py-2 text-danger delete-post-btn" href="#" data-id="@draft.Id"><i class="far fa-trash-alt mr-2"></i> Delete</a>
+                            </div>
+                        </div>
+
+                        <div class="row no-gutters align-items-start">
+                            <!-- Main Content Area -->
+                            <div class="col-8 col-md-9">
+                                <div class="card-body pl-0 pt-0">
+                                    <a class="read-post-btn text-decoration-none" asp-controller="Blog" asp-action="Edit" asp-route-username="@User.Identity.Name"
+                                     asp-route-id="@draft.Id"  data-id="@draft.Url">
+                                        <h2 class="card-title font-weight-bold h3 text-dark mb-2 post-title-hover" style="font-family: 'Playfair Display', serif; line-height: 1.3;">
+                                            @draft.Title
+                                        </h2>
+                                    </a>
+
+                                    <p class="card-text text-muted d-none d-md-block mb-3" style="font-size: 1rem; line-height: 1.5;">
+                                        @draft?.Body?.Substring(0, Math.Min(draft.Body.Length, 150))...
+                                    </p>
+
+                                    <div class="d-flex align-items-center mt-3">
+                                        <span class="text-muted small">
+                                            <i class="far fa-calendar-alt mr-1"></i> @draft.PublishedAt.ToString()
+                                        </span>
+                                        <div class="ml-auto">
+                                            <a asp-controller="Blog" asp-action="Edit" asp-route-username="@User.Identity.Name" 
+                                             asp-route-id="@draft.Id" class="btn btn-sm btn-link text-dark font-weight-bold read-post-btn p-0" data-id="@draft.Url">
+                                                Read More &rarr;
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thumbnail Area -->
+                            <div class="col-4 col-md-3 text-right">
+                                <img src="/thumbnails/@(draft?.ThumbnailName ?? "ShareThought.jpg")"
+                                     class="rounded shadow-sm"
+                                     alt="Thumbnail"
+                                     style="object-fit: cover; height: 140px; width: 100%; max-width: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		}
+	}
+}
+
+@section Scripts
+{
+	<script>
+        $(document).ready(function(){
+			$(document).on('click','.delete-post-btn',function(e){
+				e.preventDefault();
+				let id = $(this).data('id');
+				let deleteModal = $('#deleteModal');
+				$('#delete-id').val(id);
+				deleteModal.find('.modal-body p').text('Do you really want to delete this draft?This action is not recoverable');
+				$('#delete-form').attr('action','/blog/deletedraft');
+				deleteModal.modal('show');
+			});
+
+			$('#delete-button').click(function(){
+				$('#delete-form').submit();
+			});
+
+			$(document).on('click','.edit-post-btn',function(e){
+				e.preventDefault();
+				let id = $(this).data('id');
+				window.location.href = `/blog/edit/${id}`;
+			})
+		});
+
+    </script>
+}
+
+
+

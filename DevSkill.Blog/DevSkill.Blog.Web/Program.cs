@@ -1,9 +1,10 @@
 using Cortex.Mediator.DependencyInjection;
-using DevSkill.Blog.Application.Features.Post.Commands.BlogCommand;
+using DevSkill.Blog.Application.Features.Post.Commands.BlogPostCommand;
 using DevSkill.Blog.Domain.Email;
 using DevSkill.Blog.Infrastructure;
 using DevSkill.Blog.Infrastructure.Data;
 using DevSkill.Blog.Infrastructure.Extensions;
+using DevSkill.Blog.Infrastructure.Identity.Query.UserQuery;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
@@ -43,6 +44,8 @@ try
         throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     var migrationAssembly = Assembly.GetAssembly(typeof(ApplicationDbContext));
 
+    Log.Information(connectionString);
+
     #region google login
     builder.Services.AddAuthentication().AddGoogle(googleOptions =>
     {
@@ -66,7 +69,7 @@ try
     #region Cortex mediator configuration
     builder.Services.AddCortexMediator(
         builder.Configuration,
-        new[] { typeof(Program), typeof(CreateBlogPostCommand) },
+        new[] { typeof(Program), typeof(CreateBlogPostCommand),typeof(GetUsersQuery) },
         options => options.AddDefaultBehaviors()
         );
     #endregion
@@ -84,6 +87,10 @@ try
 
     #region ApplicationDbcontext binding
     builder.Services.AddApplicationDbContext(connectionString, migrationAssembly);
+    #endregion
+
+    #region Docker IP Correction
+    builder.WebHost.UseUrls("http://*:80");
     #endregion
 
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -120,11 +127,17 @@ try
     app.UseAuthorization();
 
     app.MapStaticAssets();
+    app.UseStaticFiles();
 
     app.MapControllerRoute(
         name: "areas",
         pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}")
         .WithStaticAssets();
+
+    app.MapControllerRoute(
+        name: "user_blog",
+        pattern: "{username}/{action=Index}/{id?}",
+        defaults: new { controller = "Blog" });
 
     app.MapControllerRoute(
         name: "default",

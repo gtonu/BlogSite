@@ -1,15 +1,19 @@
 ﻿using Cortex.Mediator;
 using DevSkill.Blog.Application.Features.Post.Commands.TagCommand;
 using DevSkill.Blog.Application.Features.Post.Queries.TagQuery;
+using DevSkill.Blog.Domain.Dtos;
 using DevSkill.Blog.Domain.Entities;
 using DevSkill.Blog.Web.Areas.Admin.Models;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace DevSkill.Blog.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize(Roles = "Admin")]
     public class TagController : Controller
     {
         private readonly ILogger<TagController> _logger;
@@ -37,13 +41,13 @@ namespace DevSkill.Blog.Web.Areas.Admin.Controllers
                 try
                 {
                     var command = _mapper.Map<CreateTagCommand>(model);
-                    var category = await _mediator.SendCommandAsync<CreateTagCommand, Tag>(command);
+                    var tag = await _mediator.SendCommandAsync<CreateTagCommand, Tag>(command);
                 }
                 catch(Exception ex)
                 {
                     _logger.LogInformation(ex, "something went wrong while creating tag");
                 }
-                return RedirectToAction();
+                return RedirectToAction("Index");
             }
             return View(model);
         }
@@ -53,10 +57,11 @@ namespace DevSkill.Blog.Web.Areas.Admin.Controllers
             var query = new GetTagsQuery();
             query.PageIndex = model.PageIndex;
             query.PageSize = model.PageSize;
+            query.TagName = string.IsNullOrEmpty(model.SearchItem.TagName) ? null : model.SearchItem.TagName;
             query.SortOrder = model.FormatSortExpression("TagName");
-            query.SearchText = model.Search.Value;
 
-            var (items,total,totalDisplay) = await _mediator.SendQueryAsync<GetTagsQuery, (IList<Tag>, int, int)>(query);
+            var (items, total, totalDisplay) = await _mediator
+                        .SendQueryAsync<GetTagsQuery, (IList<TagDto>, int, int)>(query);
 
             var tags = new
             {
@@ -70,6 +75,66 @@ namespace DevSkill.Blog.Web.Areas.Admin.Controllers
                         }).ToArray()
             };
             return Json(tags);
+        }
+
+        [AllowAnonymous]
+        public async Task<JsonResult> GetDropDownTags()
+        {
+            var query = new GetDropDownTagsQuery();
+            var outputs = await _mediator.SendQueryAsync<GetDropDownTagsQuery, IList<Tag>>(query);
+
+            var tags = new
+            {
+                results = (from output in outputs
+                           select new
+                           {
+                               id = output.Id.ToString(),
+                               text = HttpUtility.HtmlEncode(output.TagName)
+                           }).ToArray()
+            };
+
+            return Json(tags);
+        }
+        public async Task<JsonResult> Edit(Guid id)
+        {
+            try
+            {
+                var query = new GetTagByIdQuery { Id = id };
+                var tag = await _mediator.SendQueryAsync<GetTagByIdQuery, Tag>(query);
+                var model = _mapper.Map<EditTagModel>(tag);
+                return Json(model);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Something went wrong!");
+            }
+            return Json(new EditTagModel { });
+        }
+        [HttpPost,ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAsync(EditTagModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var command = _mapper.Map<EditTagCommand>(model);
+                var tag = await _mediator.SendCommandAsync<EditTagCommand, Tag>(command);
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
+        [HttpPost,ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            try
+            {
+                var command = new DeleteTagCommand { Id = id };
+
+                var deletedId = await _mediator.SendCommandAsync<DeleteTagCommand, Guid>(command);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Something went wrong!");
+            }
+            return RedirectToAction("Index");
         }
     }
 }

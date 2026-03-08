@@ -9,5 +9,8 @@ namespace DevSkill.Blog.Domain.Repositories
 {
     public interface ITermsAndConditionsRepository : IRepository<TermsAndConditions,Guid>
     {
+        Task<TermsAndConditions> GetByVersionAsync(string version);
+        Task<(IList<TermsAndConditions>, int, int)> GetTermsAndConditionsListAsync(int pageIndex, int pageSize,
+                                                                              string? searchText, string? sortOrder);
     }
 }

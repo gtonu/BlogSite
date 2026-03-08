@@ -1,0 +1,437 @@
+﻿@model GetContactUsMessages
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css" />
+}
+
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Breadcrumb & Header -->
+    <nav aria-label="breadcrumb" class="mb-2">
+        <ol class="breadcrumb breadcrumb-style1">
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="ContactUs" asp-action="Index">Contact Us</a>
+            </li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+    </nav>
+    <!-- buttons section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">
+            <span class="text-muted fw-light">Inbox /</span> Message List
+        </h4>
+        <button class="btn rounded-pill btn-outline-secondary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseExample"
+                aria-expanded="false"
+                aria-controls="collapseExample">
+            <i class="bx bx-filter-alt me-1"></i> Filter
+        </button>
+    </div>
+    <!-- /buttons section -->
+    <!-- Collapsed content block for advanced search form -->
+    <div class="collapse" id="collapseExample">
+        <div class="d-grid form-control p-3 border">
+            <!-- ROW 1: Text Inputs -->
+            <div class="row g-2">
+                <!-- Changed .col to .col-md-6 to take half width each on medium screens -->
+                <div class="form-group col-md-6 mb-3">
+                    <label asp-for="SearchItem.SenderName" class="form-label">SenderName</label>
+                    <input type="text" asp-for="SearchItem.SenderName" class="form-control" placeholder="Enter sender name" />
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label asp-for="SearchItem.SenderEmail" class="form-label">Email</label>
+                    <input type="text" asp-for="SearchItem.SenderEmail" class="form-control" placeholder="example@gmail.com" />
+                </div>
+            </div>
+
+            <!-- ROW 2: Radio and Dates -->
+            <div class="row g-3 align-items-end">
+                <!-- Added a wrapper col for the radio buttons to keep them together -->
+                <div class="col-md-4 mb-3">
+                    <label class="form-label d-block" asp-for="SearchItem.MarkAsRead">Marked as read?</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="SearchItem.MarkAsRead" value="True" />
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="SearchItem.MarkAsRead" value="False" />
+                        <label class="form-check-label">No</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ROW 4: Button -->
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <button type="submit" class="btn rounded-pill btn-info" id="filterButton">Apply filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Collapsed content -->
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel1">Edit</h2>
+                    <button type="button"
+                            class="rounded-pill btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <form id="edit-form" action="" method="post" asp-antiforgery="true">
+                        <input type="hidden" id="edit-id" name="Id" />
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="SenderName" class="form-label">SenderName</label>
+                                <input type="text" id="edit-sender-name" name="SenderName" class="form-control" disabled />
+                                <span class="text-danger-small" id="edit-senderName-validation"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="SenderEmail" class="form-label">SenderEmail</label>
+                                <input type="text" id="edit-sender-email" name="SenderEmail" class="form-control" disabled />
+                                <span class="text-danger-small" id="edit-senderEmail-validation"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="Message" class="form-label">Message</label>
+                                <input type="text" id="edit-message-body" name="Message" class="form-control" disabled />
+                                <span class="text-danger-small" id="edit-message-body-validation"></span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="edit-recieved-date" name="ReceivedDate">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="Reply" class="form-label">Reply</label>
+                                <input type="text" id="edit-reply-body" name="Reply" class="form-control" disabled/>
+                                <span class="text-danger-small" id="edit-reply-body-validation"></span>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input type="hidden" name="MarkAsRead" value="false">
+                            <input class="form-check-input" type="checkbox" name="MarkAsRead" id="edit-mark-as-read" value="true" checked>
+                            <label class="form-check-label" name="MarkAsRead" for="edit-mark-as-read">Mark as read</label>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn rounded-pill btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-success" id="save-button">
+                        <i class="fa-solid fa-floppy-disk" style="color: #1b1d1d;"></i>Save changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reply Modal -->
+    <div class="modal fade" id="replyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel1">Reply</h2>
+                    <button type="button"
+                            class="rounded-pill btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <form id="reply-form" action="" method="post" asp-antiforgery="true">
+                        <input type="hidden" id="reply-id" name="Id" />
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="SenderName" class="form-label">SenderName</label>
+                                <input type="text" id="reply-sender-name" name="SenderName" class="form-control" disabled/>
+                                <span class="text-danger-small" id="reply-senderName-validation"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="SenderEmail" class="form-label">SenderEmail</label>
+                                <input type="text" id="reply-sender-email" name="SenderEmail" class="form-control" disabled/>
+                                <span class="text-danger-small" id="reply-senderEmail-validation"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="Message" class="form-label">Message</label>
+                                <input type="text" id="reply-message-body" name="Message" class="form-control" disabled/>
+                                <span class="text-danger-small" id="reply-message-body-validation"></span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="reply-recieved-date" name="ReceivedDate">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label name="Reply" class="form-label">Reply</label>
+                                <input type="text" id="reply-body" name="Reply" class="form-control" placeholder="write your reply here"/>
+                                <span class="text-danger-small" id="reply-body-validation"></span>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input type="hidden" name="MarkAsRead" value="false">
+                            <input class="form-check-input" type="checkbox" name="MarkAsRead" id="reply-mark-as-read" value="true" checked>
+                            <label class="form-check-label" name="MarkAsRead" for="reply-mark-as-read">Mark as read</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn rounded-pill btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn rounded-pill btn-success" id="reply-button">
+                        <i class="fa-solid fa-paper-plane" style="color: #22281f;"></i> Reply
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_DeleteModalPartial" />
+    <!-- /Modal -->
+    <!-- begin::Datatable section -->
+    <div class="card shadow-sm border-0">
+        <!-- Eye-catchy Header with Background -->
+        <div class="card-header d-flex justify-content-between align-items-center bg-primary py-3">
+            <h5 class="card-title mb-0 text-white">
+                <i class="bx bx-envelope me-2"></i> User Inquiries
+            </h5>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive text-nowrap">
+                <table id="contactUs" class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">SenderName</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">SenderEmail</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">ReceivedDate</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">RepliedDate</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">MarkAsRead</th>
+                            <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 120px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        <!-- DataTables Populated -->
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase fw-bold small text-muted">SenderName</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">SenderEmail</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">ReceivedDate</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">RepliedDate</th>
+                            <th class="py-3 text-uppercase fw-bold small text-muted">MarkAsRead</th>
+                            <th class="pe-4 py-3 text-uppercase fw-bold small text-muted text-center" style="width: 120px;">Actions</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- Subtle Footer Accent -->
+        <div class="card-footer border-top-0 py-2 bg-light opacity-50"></div>
+    </div>
+    <!-- end::Datatable section -->
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+    <script>
+        $(function()
+        {
+            $("#contactUs").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                searching:false,
+                ajax: {
+                    url: "/Admin/ContactUs/GetMessages",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function(d){
+                        d.SearchItem = {
+                            SenderName: $("#SearchItem_SenderName").val(),
+                            SenderEmail: $("#SearchItem_SenderEmail").val(),
+                            MarkAsRead: $("input[name='SearchItem.MarkAsRead']:checked").length === 0 ? null :
+                                            $("input[name='SearchItem.MarkAsRead']:checked").val() === "True"
+                        };
+                        return JSON.stringify(d);
+                    },
+
+                },
+                columnDefs:[
+                    {
+                        targets: 4,
+                        render: function(data, type, row){
+                            if(data == "True")
+                                return `<span class="badge rounded-pill bg-success">Yes</span>`;
+                            else
+                                return `<span class="badge rounded-pill bg-danger">No</span>`;
+                        }
+                    },
+                    {
+                        orderable: false,
+                        targets: 5,
+                        render: function(data, type, row){
+                            return `
+                                    <button type="submit" class="btn rounded-pill btn-success btn-sm reply-bs-modal" data-id='${data}' value='${data}'>
+                                        <i class="fa-solid fa-paper-plane" style="color: #22281f;"></i> Reply
+                                    </button>
+                                    <button type="submit" class="btn rounded-pill btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>`;
+                        }
+                    }
+                ]
+            });
+
+            //edit section
+            $("#contactUs").on("click",".edit-bs-modal",function(){
+                let id = $(this).data("id");
+                $.getJSON(`/admin/contactus/edit/${id}`, function (data) {
+                    $("#edit-id").val(data.id);
+                    $("#edit-sender-name").val(data.senderName);
+                    $("#edit-sender-email").val(data.senderEmail);
+                    $("#edit-message-body").val(data.message);
+                    $("#edit-received-date").val(data.receivedDate);
+                    $("#edit-reply-body").val(data.reply);
+                    $("#edit-mark-as-read").val(data.markAsRead);
+                    $("#editModal").modal('show');
+                });
+
+            });
+
+            $(document).on("click", "#save-button", function () {
+              
+              let form = $("#edit-form");
+              //here storing the hidden Input datas
+              let data = form.serializeArray();
+              data = data.filter(x => x.name !== "MarkAsRead");
+              data.push({
+                  name:"MarkAsRead",
+                  value:$("#edit-mark-as-read").is(":checked")
+              });
+                $.ajax({
+                    url: "/admin/contactus/edit",
+                    type: "POST",
+                    data: $.param(data),
+                    success: function () {
+                        $("#editModal").modal("hide");
+                        $("#contactUs").DataTable().ajax.reload(null, false);
+                    }
+                });
+            });
+
+            //reply section...
+            $("#contactUs").on("click",".reply-bs-modal",function(){
+                //these two lines clears the previous shown Error message if any
+                $("#reply-body-validation").text("");
+                $("#reply-body").removeClass("is-invalid");
+
+                let id = $(this).data("id");
+                $.getJSON(`/admin/contactus/edit/${id}`, function (data) {
+                    $("#reply-id").val(data.id);
+                    $("#reply-sender-name").val(data.senderName);
+                    $("#reply-sender-email").val(data.senderEmail);
+                    $("#reply-message-body").val(data.message);
+                    $("#reply-received-date").val(data.receivedDate);
+                    $("#replyModal").modal('show');
+                });
+
+            });
+
+            function validateReplyBody(){
+                let replyBodyInput = $("#reply-body");
+                let errorSpan = $("#reply-body-validation");
+                let replyInput = replyBodyInput.val();
+
+                //clear the previous shown Error message if any
+                errorSpan.text("");
+                replyBodyInput.removeClass("is-invalid");
+
+                //checking if reply-body is empty or not
+                if(replyInput.length === 0){
+                    errorSpan.text("reply something");
+                    replyBodyInput.addClass("is-invalid");
+                    replyBodyInput.focus();
+                    return false;
+                }
+                return true;
+            }
+
+            $(document).on("click", "#reply-button", function () {
+              //client side validation
+              if(!validateReplyBody()){
+                  return;
+              }
+              let form = $("#reply-form");
+              //here storing the hidden Input datas
+              let data = form.serializeArray();
+              data = data.filter(x => x.name !== "MarkAsRead");
+              data.push({
+                  name:"MarkAsRead",
+                  value:$("#reply-mark-as-read").is(":checked")
+              },
+              {
+                  name:"SenderName",
+                  value:$("#reply-sender-name").val()
+              },
+              {
+                  name:"SenderEmail",
+                  value:$("#reply-sender-email").val()
+              });
+
+                $.ajax({
+                    url: "/admin/contactus/reply",
+                    type: "POST",
+                    data: $.param(data),
+                    success: function () {
+                        $("#replyModal").modal("hide");
+                        $("#contactUs").DataTable().ajax.reload(null, false);
+                    }
+                });
+            });
+
+            //delete section
+            $("#contactUs").on("click",".show-bs-modal",function(){
+                let id = $(this).data("id");
+                let deleteModal = $("#deleteModal");
+                deleteModal.find('.modal-body p').text(`Do you really want to delete this message?`);
+                $("#delete-id").val(id);
+                $("#delete-form").attr("action","/admin/contactUs/delete");
+                deleteModal.modal('show');
+            });
+
+            $("#delete-button").click(function()
+            {
+                $("#delete-form").submit();
+            });
+
+            $("#filterButton").click(function(){
+                $("#contactUs").DataTable().ajax.reload(null,false);
+            });
+
+        });
+    </script>
+}

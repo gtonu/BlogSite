@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Post\Queries\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\DevSkill.Blog\DevSkill.Blog.Application\DevSkill.Blog.Application.csproj" />
   </ItemGroup>
 

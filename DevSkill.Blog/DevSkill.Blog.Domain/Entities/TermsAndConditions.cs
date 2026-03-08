@@ -10,5 +10,7 @@ namespace DevSkill.Blog.Domain.Entities
     {
         public Guid Id { get; set; }
         public string Content { get; set; } = null!;
+        public string Version { get; set; } = null!;
+        public DateTime DateTime { get; set; }
     }
 }

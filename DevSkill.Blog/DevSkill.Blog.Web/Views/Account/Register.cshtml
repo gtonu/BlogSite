@@ -11,7 +11,7 @@
 
 <!-- the pulse animation will apply on page reload,not on hover -->
 <div class="card ">
-    <div class="bg-secondary p-1 rounded-top w-100"></div>
+    @* <div class="bg-secondary p-1 rounded-top w-100"></div> *@
     <div class="card-body">
         <!-- Logo -->
         <div class="app-brand justify-content-center">
@@ -59,27 +59,26 @@
                         </g>
                     </svg>
                 </span>
-                <span class="app-brand-text demo text-body fw-bolder">Sneat</span>
+                <span class="app-brand-text demo text-body fw-bolder">Share Thought</span>
             </a>
         </div>
         <!-- /Logo -->
-        <h4 class="mb-2">Adventure starts here 🚀</h4>
-        <p class="mb-4">Make your app management easy and fun!</p>
+        <div asp-validation-summary="All" class="text-danger"></div>
 
         <form class="mb-3" asp-antiforgery="true" asp-area="" asp-controller="Account"
               asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" method="POST" enctype="multipart/form-data">
             <div class="form-floating mb-3">
                 <input type="text" class="form-control"
-                       placeholder="Enter your first name" asp-for="FirstName">
-                <label asp-for="FirstName">FirstName</label>
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+                       placeholder="Enter a user name" asp-for="UserName">
+                <label asp-for="UserName">UserName</label>
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
+            @* <div class="form-floating mb-3">
                 <input type="text" class="form-control"
                        placeholder="Enter your last name" asp-for="LastName">
                 <label asp-for="LastName">LastName</label>
                 <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
+            </div> *@
             <div class="form-floating mb-3">
                 <input type="tel" class="form-control" id="phone"
                        placeholder="Enter your phone number" asp-for="PhoneNumber">
@@ -87,7 +86,6 @@
                 <input type="hidden" id="countryDialCode" asp-for="CountryDialCode">
                 <p class="text-info"><small>Optional</small></p>
             </div>
-            <div><span asp-validation-for="LastName" class="text-danger"></span></div>
             <div class="form-floating mb-3">
                 <input type="email" class="form-control"
                        placeholder="Enter your email address" asp-for="Email">
@@ -116,7 +114,7 @@
                     </label>
                 </div>
             </div>
-            <button class="btn btn-primary d-grid w-100">Sign up</button>
+            <button class="btn btn-brand d-grid w-100 text-white">Sign up</button>
         </form>
 
         <p class="text-center">
@@ -181,7 +179,7 @@
 
         </div>
     </div>
-    <div class="bg-secondary p-1 rounded-bottom w-100"></div>
+    @* <div class="bg-secondary p-1 rounded-bottom w-100"></div> *@
 </div>
 
 @section Scripts {

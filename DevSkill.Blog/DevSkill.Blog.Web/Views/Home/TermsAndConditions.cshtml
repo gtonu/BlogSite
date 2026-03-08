@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewData["Title"] = "TermsAndConditions";
+    Layout = "_BlogSiteLayout";
+}
+
+@* <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+        <div class="single-post">
+            
+            <div class="post-body">
+                
+                <div class="entry-content">
+                   
+                    <p id="termsAndConditions">
+                        
+                    </p>
+                    
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div> *@
+
+<div class="container-fluid pt-5 pb-5">
+    <div class="row justify-content-center">
+        <!-- Constrained to col-lg-8 for the ideal reading line-length -->
+        <div class="col-12 col-md-10 col-lg-8">
+
+            <article class="terms-content shadow-sm p-5 bg-white border rounded-lg" style="border-color: #f0f0f0 !important;">
+
+                <header class="mb-5 border-bottom pb-4">
+                    <h1 class="display-4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #212529; letter-spacing: -1.5px;">
+                        Terms and Conditions
+                    </h1>
+                    <p class="text-muted small text-uppercase font-weight-bold" style="letter-spacing: 2px;">
+                        Last Updated: February 2026
+                    </p>
+                </header>
+
+                <section class="terms-body" style="font-family: 'Inter', system-ui, -apple-system, sans-serif; line-height: 1.8; color: #333;">
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">1. Acceptance of Terms</h3>
+                        <p>By accessing, browsing, or using <strong>Share Thought</strong> blog platform, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, along with any policies incorporated by reference. If you do not agree to these Terms, you must discontinue use of the Site immediately.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">2. Nature of the Platform</h3>
+                        <p>The Site is an open blogging platform where any individual may read or submit content. The purpose of the Site is to promote the sharing of ideas, opinions, and information in a manner that is modest, decent, respectful, and appropriate for a general audience. The Site is not intended to host content that may cause discomfort, harm, or offense to the public.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">3. User Eligibility and Responsibility</h3>
+                        <p>By using the Site, you confirm that you are legally capable of entering into a binding agreement under applicable law. You are solely responsible for all content you submit, publish, or otherwise make available through the Site, and for ensuring that such content complies with these Terms, all applicable laws, and accepted standards of public decency.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">4. Content Standards and Community Conduct</h3>
+                        <p>Users agree that they will not post, upload, publish, or distribute any content that:</p>
+                        <ul class="pl-4">
+                            <li>Is obscene, indecent, sexually explicit, pornographic, or contrary to generally accepted standards of modesty and public morality</li>
+                            <li>Is hateful, abusive, threatening, harassing, defamatory, or discriminatory toward any individual or group</li>
+                            <li>Promotes or incites violence, illegal activities, public disorder, or social or religious disharmony</li>
+                            <li>Violates the privacy, dignity, or personal rights of others, including the unauthorized disclosure of personal information</li>
+                            <li>Infringes copyrights, trademarks, or other intellectual property rights</li>
+                            <li>Contains false, misleading, malicious, or deceptive material, including spam or malware</li>
+                        </ul>
+                        <p class="mt-3 font-italic">Differences of opinion are permitted; however, hostile behavior, trolling, or deliberate disruption of the community is strictly prohibited.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">5. Content Policy and Legal Compliance</h3>
+                        <p>All content on the Site must comply with the laws of the People’s Republic of Bangladesh, including but not limited to the <strong>Information and Communication Technology Act</strong> and the <strong>Digital Security Act</strong>. Users are responsible for ensuring that their content is lawful both in Bangladesh and in their own jurisdiction.</p>
+                    </div>
+
+                    <div class="mb-5 border-left pl-4 py-2 bg-light rounded">
+                        <h3 class="h4 font-weight-bold mb-3" style="font-family: 'Playfair Display', serif; color: #000;">6. Moderation and Enforcement</h3>
+                        <p>The Site reserves the sole and absolute right to monitor, review, moderate, restrict, edit, or remove any content. Enforcement actions may include removal of content, warnings, temporary suspension, or permanent termination of accounts.</p>
+                    </div>
+
+                    <div class="mb-5 pt-4">
+                        <p class="text-muted small">For questions regarding these terms, please visit our
+                            <a asp-controller="Home" asp-action="ContactUs" class="text-dark border-bottom">Contact Page</a>.</p>
+                    </div>
+                </section>
+
+                <footer class="mt-5 pt-4 border-top text-center">
+                    <p class="mb-0 small text-muted">&copy; 2026 ShareThought Platform. All rights reserved.</p>
+                </footer>
+
+            </article>
+
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    @* <script>
+        $(function(){
+            $.getJSON(`/admin/TermsAndConditions/GetByVersion`, function (data) {
+                    let html = marked.parse(data.content);
+                    // $("#loader").addClass("d-none");
+                    $("#termsAndConditions").html(html);
+            });
+        });
+    </script> *@
+}
+

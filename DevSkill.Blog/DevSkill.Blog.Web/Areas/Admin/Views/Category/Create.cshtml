@@ -96,70 +96,8 @@
         </div>
         <!--end::Row-->
     </div>
-
-    <div class="container-fluid">
-        <table id="categories" class="table table-hover table-success table-striped-columns">
-            <thead>
-                <tr>
-                    <th>CategoryName</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>CategoryName</th>
-                    <th>Actions</th>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
 </div>
 
-@section Scripts
-{
-    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
-    <script>
-        $(function()
-        {
-            $("#categories").DataTable({
-                processing: true,
-                serverSide: true,
-                responsive: true,
-                lengthChange: true,
-                autoWidth: false,
-                ajax: {
-                    url: "/Admin/Category/GetCategories",
-                    type: "POST",
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: function(d){
-                        d.SearchItem = {
-
-                        };
-                        return JSON.stringify(d);
-                    },
-                },
-                columnDefs:[
-                    {
-                        orderable: false,
-                        targets: 1,
-                        render: function(data, type, row){
-                            return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/product/edit/${data}'" value='${data}'>
-                                        <i class="fa fa-pencil"></i> Edit
-                                    </button>
-                                    <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
-                                        <i class="fa fa-trash"></i> Delete
-                                    </button>`;
-                        }
-                    }
-                ]
-            })
-
-        });
-    </script>
-}
 
 
 
